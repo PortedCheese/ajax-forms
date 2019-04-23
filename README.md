@@ -13,3 +13,5 @@
 Нужно выгрузить js, который отправляет форму с классом `sending-form`
 
 `php artisan vendor:publish --provider="PortedCheese\AjaxForms\AjaxFormsServiceProvider"`
+
+Шаблон для меню `@includeIf('ajax-forms::admin.ajax-forms.menu')`
