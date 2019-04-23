@@ -1,0 +1,28 @@
+{
+    "name": "portedcheese/ajax-forms",
+    "description": "Submit contact form by ajax",
+    "type": "library",
+    "require": {
+        "portedcheese/base-settings": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vladimir Peshkov",
+            "email": "vladimirpeshkov5@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "PortedCheese\\AjaxForms\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PortedCheese\\AjaxForms\\AjaxFormsServiceProvider"
+            ]
+        }
+    }
+}
