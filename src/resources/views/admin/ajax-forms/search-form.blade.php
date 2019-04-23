@@ -2,13 +2,15 @@
       class="form-inline"
       method="get">
     @foreach($headers as $head)
-        <label class="sr-only" for="{{ $head->name }}">{{ $head->title }}</label>
-        <input type="text"
-               class="form-control mb-2 mr-sm-2"
-               id="{{ $head->name }}"
-               name="{{ $head->name }}"
-               value="{{ $query->get($head->name) }}"
-               placeholder="{{ $head->title }}">
+        @if ($head->type == 'text')
+            <label class="sr-only" for="{{ $head->name }}">{{ $head->title }}</label>
+            <input type="text"
+                   class="form-control mb-2 mr-sm-2"
+                   id="{{ $head->name }}"
+                   name="{{ $head->name }}"
+                   value="{{ $query->get($head->name) }}"
+                   placeholder="{{ $head->title }}">
+        @endif
     @endforeach
 
     <label class="sr-only" for="author">Автор(email)</label>

@@ -46,4 +46,8 @@ Route::group([
 ], function () {
     Route::get('{form}', "FormController@submissions")
         ->name('submissions');
+    Route::delete('{submission}', "FormController@destroySubmission")
+        ->name('submissions.destroy');
+    Route::get('file/{submission}', "FormController@download")
+        ->name('submission.download');
 });

@@ -3,6 +3,7 @@
 namespace PortedCheese\AjaxForms\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class AjaxFormValue extends Model
 {
@@ -12,6 +13,19 @@ class AjaxFormValue extends Model
         'long_value',
         'field_id',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($value) {
+            $field = $value->field;
+            if ($field->type == 'file') {
+                $path = $value->value;
+                Storage::delete($path);
+            }
+        });
+    }
 
     /**
      * Значение относится к конкретному сабмиту.
@@ -49,6 +63,10 @@ class AjaxFormValue extends Model
         $str = NULL;
         if ($field->type == 'longText') {
             $long = $value;
+        }
+        elseif ($field->type == 'file') {
+            $path = $value->store("submissions");
+            $str = $path;
         }
         else {
             $str = $value;

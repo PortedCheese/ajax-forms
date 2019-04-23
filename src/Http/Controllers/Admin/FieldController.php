@@ -90,6 +90,11 @@ class FieldController extends Controller
      */
     public function detach(AjaxForm $form, AjaxFormField $field)
     {
+        if ($form->submissions->count()) {
+            return redirect()
+                ->route("admin.ajax-forms.show", ['ajax_form' => $form])
+                ->with('danger', 'Невозможно удалить поле, у формы есть сообщения.');
+        }
         $form->fields()->detach($field);
         $field->checkFormsOnDetach();
         return redirect()

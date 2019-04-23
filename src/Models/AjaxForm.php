@@ -3,6 +3,7 @@
 namespace PortedCheese\AjaxForms\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class AjaxForm extends Model
@@ -64,14 +65,24 @@ class AjaxForm extends Model
      *
      * @param $userInput
      */
-    public function makeSubmission($userInput)
+    public function makeSubmission(Request $request)
     {
         $fields = [];
         foreach ($this->fields as $field) {
-            if (!empty($userInput[$field->name])) {
+            if ($request->has($field->name)) {
+                if ($field->type == 'file') {
+                    if (!$request->hasFile($field->name)) {
+                        continue;
+                    }
+                    $value = $request
+                        ->file($field->name);
+                }
+                else {
+                    $value = $request->get($field->name);
+                }
                 $fields[] = [
                     'field' => $field,
-                    'value' => $userInput[$field->name],
+                    'value' => $value,
                 ];
             }
         }

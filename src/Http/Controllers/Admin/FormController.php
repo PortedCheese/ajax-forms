@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use PortedCheese\AjaxForms\Http\Requests\AjaxFormCreateRequest;
 use PortedCheese\AjaxForms\Http\Requests\AjaxFormUpdateRequest;
 use PortedCheese\AjaxForms\Http\Services\FilterFields;
@@ -110,6 +111,11 @@ class FormController extends Controller
      */
     public function destroy(AjaxForm $ajax_form)
     {
+        if ($ajax_form->submissions->count()) {
+            return redirect()
+                ->route('admin.ajax-forms.index')
+                ->with('danger', 'Невозможно удалить форму у которой есть сообщения');
+        }
         $ajax_form->delete();
         return redirect()
             ->route('admin.ajax-forms.index')
@@ -136,8 +142,20 @@ class FormController extends Controller
         foreach ($collection as $submission) {
             $fields = [];
             foreach ($submission->values as $value) {
-                $fieldId = $value->field_id;
-                $fields[$fieldId] = !empty($value->value) ? $value->value : $value->long_value;
+                $field = $value->field;
+                $fieldId = $field->id;
+                if ($field->type != 'file') {
+                    $fields[$fieldId] = [
+                        'value' => !empty($value->value) ? $value->value : $value->long_value,
+                        'type' => $field->type,
+                    ];
+                }
+                else {
+                    $fields[$fieldId] = [
+                        'value' => url()->route('admin.ajax-forms.submission.download', ['submission' => $submission]),
+                        'type' => $field->type,
+                    ];
+                }
             }
             $submissions[] = (object) [
                 'model' => $submission,
@@ -155,5 +173,39 @@ class FormController extends Controller
             'page' => $request->query->get('page', 1) - 1,
             'collection' => $collection,
         ]);
+    }
+
+    public function download(AjaxFormSubmission $submission)
+    {
+        $path = FALSE;
+        foreach ($submission->values as $value) {
+            $field = $value->field;
+            if ($field->type == 'file') {
+                $path = $value->value;
+            }
+        }
+        if (!$path) {
+            return redirect()
+                ->back()
+                ->with('danger', 'Файл не найден');
+        }
+        return response()
+            ->download(Storage::path($path));
+    }
+
+    /**
+     * Удалить сообщение.
+     *
+     * @param AjaxFormSubmission $submission
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function destroySubmission(AjaxFormSubmission $submission)
+    {
+        $form = $submission->form;
+        $submission->delete();
+        return redirect()
+            ->route('admin.ajax-forms.submissions', ['form' => $form])
+            ->with('success', 'Сообщение удалено.');
     }
 }

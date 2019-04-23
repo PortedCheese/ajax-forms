@@ -14,7 +14,6 @@ class FormController extends Controller
         $this->result = [
             'success' => FALSE,
             'messages' => [],
-            'userInputs' => [],
         ];
     }
 
@@ -37,19 +36,30 @@ class FormController extends Controller
                 ->json($this->prepareMessages());
         }
 
-        $formData = $request->all();
         // TODO: change validation func.
-        $this->validateForm($formData);
+        $this->validateForm($request);
         if (!$this->result['success']) {
             return response()
                 ->json($this->prepareMessages());
         }
-        $form->makeSubmission($this->result['userInputs']);
-        $this->result['messages'][] = $form->success_message;
+        try {
+            $form->makeSubmission($request);
+            $this->result['messages'][] = $form->success_message;
+        }
+        catch (\Exception $e) {
+            $this->result['messages'][] = $form->fail_message;
+            $this->result['success'] = FALSE;
+        }
         return response()
             ->json($this->prepareMessages());
     }
 
+    /**
+     * Вывод сообщений в форму.
+     *
+     * @return array
+     * @throws \Throwable
+     */
     private function prepareMessages()
     {
         $this->result['messages'] = view("ajax-forms::site.messages", [
@@ -63,29 +73,31 @@ class FormController extends Controller
      *
      * @param $formData
      */
-    private function validateForm($formData)
+    private function validateForm(Request $request)
     {
-        if (
-            empty($formData['input']) ||
-            empty($formData['elements'])
-        ) {
+        // Должно быть описание элементов.
+        if (!$request->has('jsonElements')) {
             $this->result['messages'][] = "Недостаточно параметров.";
             return;
         }
-        parse_str($formData['input'], $userInputs);
-        foreach ($formData['elements'] as $element) {
-            if (
-                !empty($element['required']) &&
-                empty($userInputs[$element['name']])
-            ) {
+        // Пробуем получить описание элементов.
+        try {
+            $decoded = json_decode($request->get('jsonElements'), TRUE);
+        }
+        catch (\Exception $e) {
+            $this->result['messages'][] = "Невозможно обработать данные.";
+            return;
+        }
+        // Обходим элементы.
+        foreach ($decoded as $element) {
+            if (!empty($element['required']) && empty($request->get($element['name']))) {
                 $this->result['messages'][] = "Поле {$element['title']} обязательно для заполнения";
                 continue;
             }
         }
-
+        // Если нет ошибок, то все хорошо.
         if (empty($this->result['messages'])) {
             $this->result['success'] = TRUE;
-            $this->result['userInputs'] = $userInputs;
         }
     }
 }
