@@ -1,0 +1,11 @@
+<?php
+
+namespace {{namespace}};
+
+use PortedCheese\AjaxForms\Models\AjaxFormField as VendorAjaxFormField;
+
+
+class AjaxFormField extends VendorAjaxFormField
+{
+
+}

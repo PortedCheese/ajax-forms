@@ -2,10 +2,10 @@
 
 namespace PortedCheese\AjaxForms\Http\Controllers\Site;
 
+use App\AjaxForm;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use PortedCheese\AjaxForms\Models\AjaxForm;
 
 class FormController extends Controller
 {

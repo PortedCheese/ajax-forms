@@ -21,6 +21,10 @@
                class="dropdown-item">
                 Создать
             </a>
+            <a href="{{ route('admin.ajax-forms.settings') }}"
+               class="dropdown-item">
+                Настройки
+            </a>
         @endrole
         @foreach($ajaxForms as $form)
             <a href="{{ route('admin.ajax-forms.submissions', ['form' => $form]) }}"

@@ -13,8 +13,8 @@ class FilterFields
 
     public function __construct()
     {
-        $this->query = DB::table('ajax_form_values as values')
-            ->join('ajax_form_submissions as submissions', 'values.submission_id', '=', 'submissions.id')
+        $this->query = DB::table('ajax_form_submissions as submissions')
+            ->leftJoin('ajax_form_values as values', 'values.submission_id', '=', 'submissions.id')
             ->leftJoin('users', 'submissions.user_id', '=', 'users.id')
             ->select(
                 'values.id as value_id',

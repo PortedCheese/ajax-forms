@@ -1,0 +1,10 @@
+<?php
+
+namespace {{namespace}}Http\Controllers\AjaxForms\Admin;
+
+use Illuminate\Http\Request;
+
+class FieldController extends \PortedCheese\AjaxForms\Http\Controllers\Admin\FieldController
+{
+
+}

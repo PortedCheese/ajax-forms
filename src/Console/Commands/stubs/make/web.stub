@@ -1,0 +1,11 @@
+
+
+if (siteconf()->get('ajax-forms.useOwnSiteRoutes')) {
+    Route::group([
+        'namespace' => 'AjaxForms\Site',
+        'as' => 'site.ajax-froms.',
+    ], function () {
+        Route::post('/ajax-forms/{form}', 'FormController@submit')
+            ->name('submit');
+    });
+}

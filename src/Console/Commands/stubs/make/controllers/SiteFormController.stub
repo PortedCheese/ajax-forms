@@ -1,0 +1,10 @@
+<?php
+
+namespace {{namespace}}Http\Controllers\AjaxForms\Site;
+
+use Illuminate\Http\Request;
+
+class FormController extends \PortedCheese\AjaxForms\Http\Controllers\Site\FormController
+{
+
+}

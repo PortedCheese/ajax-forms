@@ -4,6 +4,8 @@ namespace PortedCheese\AjaxForms;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use PortedCheese\AjaxForms\Console\Commands\AjaxFormsMakeCommand;
+use PortedCheese\AjaxForms\Console\Commands\AjaxFormsOverrideCommand;
 use PortedCheese\AjaxForms\Models\AjaxForm;
 
 class AjaxFormsServiceProvider extends ServiceProvider
@@ -28,6 +30,14 @@ class AjaxFormsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/resources/assets/js' => public_path('js/'),
         ], 'public');
+
+        // Console.
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                AjaxFormsMakeCommand::class,
+                AjaxFormsOverrideCommand::class,
+            ]);
+        }
     }
 
     public function register()

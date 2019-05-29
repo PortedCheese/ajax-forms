@@ -1,20 +1,7 @@
-<?php
-
-if (! siteconf()->get('ajax-forms.useOwnSiteRoutes')) {
+if (siteconf()->get('ajax-forms.useOwnAdminRoutes')) {
     Route::group([
-        'namespace' => 'PortedCheese\AjaxForms\Http\Controllers\Site',
-        'middleware' => ['web'],
-        'as' => 'site.ajax-froms.',
-    ], function () {
-        Route::post('/ajax-forms/{form}', 'FormController@submit')
-            ->name('submit');
-    });
-}
-
-if (! siteconf()->get('ajax-forms.useOwnAdminRoutes')) {
-    Route::group([
-        'namespace' => 'PortedCheese\AjaxForms\Http\Controllers\Admin',
-        'middleware' => ['web', 'role:admin'],
+        'namespace' => 'AjaxForms\Admin',
+        'middleware' => ['role:admin'],
         'as' => 'admin.',
         'prefix' => 'admin',
     ], function () {
@@ -41,8 +28,8 @@ if (! siteconf()->get('ajax-forms.useOwnAdminRoutes')) {
     });
 
     Route::group([
-        'namespace' => 'PortedCheese\AjaxForms\Http\Controllers\Admin',
-        'middleware' => ['web', 'role:admin|editor'],
+        'namespace' => 'AjaxForms\Admin',
+        'middleware' => ['role:admin|editor'],
         'as' => 'admin.ajax-forms.',
         'prefix' => 'admin/ajax-forms/submissions/',
     ], function () {

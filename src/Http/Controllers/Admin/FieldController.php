@@ -2,12 +2,12 @@
 
 namespace PortedCheese\AjaxForms\Http\Controllers\Admin;
 
+use App\AjaxForm;
+use App\AjaxFormField;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use PortedCheese\AjaxForms\Http\Requests\FormFieldCreateRequest;
 use PortedCheese\AjaxForms\Http\Requests\FormFieldUpdateRequest;
-use PortedCheese\AjaxForms\Models\AjaxForm;
-use PortedCheese\AjaxForms\Models\AjaxFormField;
 
 class FieldController extends Controller
 {
