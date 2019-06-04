@@ -63,8 +63,8 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
     {
         if (! $this->option('menu')) {
             $this->exportModels();
+            $this->makeConfig();
         }
-        $this->makeConfig();
         $this->makeMenu();
     }
 

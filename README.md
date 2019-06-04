@@ -12,6 +12,12 @@
 
 Нужно выгрузить js, который отправляет форму с классом `sending-form`
 
-`php artisan vendor:publish --provider="PortedCheese\AjaxForms\AjaxFormsServiceProvider"`
+`php artisan vendor:publish --provider="PortedCheese\AjaxForms\AjaxFormsServiceProvider" --tag=public --force`
+
+`php artisan make:ajax-forms {--menu : Only config menu}`
+
+`php artisan override:ajax-forms
+                     {--admin : Scaffold admin}
+                     {--site : Scaffold site}`
 
 Шаблон для меню `@includeIf('ajax-forms::admin.ajax-forms.menu')`
