@@ -8,8 +8,9 @@
         <form action="{{ route('admin.ajax-fields.update', ['form' => $form, 'field' => $field]) }}"
               method="post"
               class="col-12">
-            <input type="hidden" name="_method" value="PUT">
+            @method('put')
             @csrf
+
             <div class="form-group">
                 <label for="title">Заголовок</label>
                 <input type="text"
@@ -23,6 +24,21 @@
                         <strong>{{ $errors->first('title') }}</strong>
                     </span>
                 @endif
+            </div>
+
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox"
+                           @if (old('requred'))
+                               checked
+                           @elseif ($pivot->required)
+                               checked
+                           @endif
+                           class="custom-control-input"
+                           name="required"
+                           id="requiredCheck">
+                    <label class="custom-control-label" for="requiredCheck">Required</label>
+                </div>
             </div>
 
             <div class="btn-group"

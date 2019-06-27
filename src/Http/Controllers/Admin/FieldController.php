@@ -41,7 +41,12 @@ class FieldController extends Controller
         else {
             $field = AjaxFormField::find($request->get('exists'));
         }
-        $form->fields()->attach($field, ['title' => $request->get('title')]);
+
+        $data = [
+            'title' => $request->get('title'),
+            'required' => $request->has('required') ? 1 : 0,
+        ];
+        $form->fields()->attach($field, $data);
         return redirect()
             ->route("admin.ajax-forms.show", ['ajax_form' => $form])
             ->with('success', 'Поле успешно добавлено');
@@ -74,8 +79,12 @@ class FieldController extends Controller
      */
     public function update(FormFieldUpdateRequest $request, AjaxForm $form, AjaxFormField $field)
     {
-        $title = $request->get('title');
-        $form->fields()->updateExistingPivot($field->id, ['title' => $title]);
+        $data = [
+            'title' => $request->get('title'),
+            'required' => $request->has('required') ? 1 : 0,
+        ];
+        $form->fields()->updateExistingPivot($field->id, $data);
+        
         return redirect()
             ->route('admin.ajax-forms.show', ['ajax_form' => $form])
             ->with('success', 'Успешно обновлено');

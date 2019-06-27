@@ -25,7 +25,7 @@ class AjaxFormField extends Model
     public function forms()
     {
         return $this->belongsToMany('PortedCheese\AjaxForms\Models\AjaxForm')
-            ->withPivot('title')
+            ->withPivot('title', 'required')
             ->withTimestamps();
     }
 

@@ -82,6 +82,13 @@
                 @endif
             </div>
 
+            <div class="form-group">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="required" id="requiredCheck">
+                    <label class="custom-control-label" for="requiredCheck">Required</label>
+                </div>
+            </div>
+
             <div class="btn-group"
                  role="group">
                 <button type="submit" class="btn btn-success">Создать</button>

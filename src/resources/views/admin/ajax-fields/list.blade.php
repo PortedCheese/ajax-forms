@@ -5,6 +5,7 @@
             <th>Заголовок</th>
             <th>Имя</th>
             <th>Тип</th>
+            <th>Required</th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -14,6 +15,7 @@
                 <td>{{ $field->pivot->title }}</td>
                 <td>{{ $field->name }}</td>
                 <td>{{ $field->type }}</td>
+                <td>{{ $field->pivot->required ? 'Да' : "Нет" }}</td>
                 <td>
                     <confirm-delete-model-button model-id="{{ $field->id }}">
                         <template slot="edit">

@@ -6,13 +6,14 @@ use App\AjaxForm;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class FormController extends Controller
 {
     public function __construct()
     {
         $this->result = [
-            'success' => FALSE,
+            'success' => false,
             'messages' => [],
         ];
     }
@@ -35,12 +36,23 @@ class FormController extends Controller
             return response()
                 ->json($this->prepareMessages());
         }
-
-        // TODO: change validation func.
-        $this->validateForm($request);
-        if (!$this->result['success']) {
-            return response()
-                ->json($this->prepareMessages());
+        $rules = [];
+        $mesasges = [];
+        foreach ($form->fields as $field) {
+            $pivot = $field->pivot;
+            if (! $pivot->required) {
+                continue;
+            }
+            $rules[$field->name] = "required";
+            $mesasges[$field->name . ".required"] = "Поле {$pivot->title} обязательно для заполнения";
+        }
+        if (! empty($rules)) {
+            Validator::make($request->all(), $rules, $mesasges)
+                ->validate();
+            $this->result['success'] = true;
+        }
+        else {
+            $this->result['success'] = false;
         }
         try {
             $form->makeSubmission($request);
@@ -48,7 +60,7 @@ class FormController extends Controller
         }
         catch (\Exception $e) {
             $this->result['messages'][] = $form->fail_message;
-            $this->result['success'] = FALSE;
+            $this->result['success'] = false;
         }
         return response()
             ->json($this->prepareMessages());
