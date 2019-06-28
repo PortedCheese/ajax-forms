@@ -74,6 +74,17 @@ class AjaxFormSubmission extends Model
     }
 
     /**
+     * Изменить временную зону.
+     *
+     * @param $value
+     * @return mixed
+     */
+    public function getCreatedAtAttribute($value)
+    {
+        return datehelper()->changeTz($value);
+    }
+
+    /**
      * Создать сабмит и значения для формы.
      *
      * @param AjaxForm $form

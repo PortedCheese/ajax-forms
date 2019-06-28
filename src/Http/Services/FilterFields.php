@@ -90,14 +90,14 @@ class FilterFields
         }
         if (!empty($queryValues['from'])) {
             $this->fields[] = (object) [
-                'value' => date("Y-m-d", strtotime($queryValues['from'])),
+                'value' => datehelper()->forFilter($queryValues['from']),
                 'key' => 'submissions.created_at',
                 'type' => 'moreThan',
             ];
         }
         if (!empty($queryValues['to'])) {
             $this->fields[] = (object) [
-                'value' => date("Y-m-d", strtotime("+ 1 day", strtotime($queryValues['to']))),
+                'value' => datehelper()->forFilter($queryValues['to'], true),
                 'key' => 'submissions.created_at',
                 'type' => 'lessThan',
             ];
