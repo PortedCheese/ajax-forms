@@ -52,7 +52,7 @@ class FormController extends Controller
             $this->result['success'] = true;
         }
         else {
-            $this->result['success'] = false;
+            $this->result['success'] = true;
         }
         try {
             $form->makeSubmission($request);
