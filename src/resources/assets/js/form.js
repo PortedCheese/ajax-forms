@@ -32,12 +32,14 @@
             $(el).parent().find('input').removeClass('is-invalid');
             $(el).remove();
         });
+        $form.find('div.alert').each(function (inx, el) {
+            $(el).remove();
+        });
 
         axios
             .post("/ajax-forms/" + formAttr.name, formData)
             .then(response => {
                 let data = response.data;
-                console.log(data);
                 if (data.messages.length) {
                     $(data.messages).prependTo($form);
                 }
@@ -49,13 +51,28 @@
                 let data = error.response.data;
                 for (let item in data.errors) {
                     let $input = $form.find("input[name='" + item + "']");
-                    let $parent = $input.parent().append("<span class=\"invalid-feedback\" role=\"alert\"></span>");
-                    let $errorBlock = $parent.find('.invalid-feedback');
-                    $input.toggleClass('is-invalid');
-                    for (index in data.errors[item]) {
-                        if (data.errors[item].hasOwnProperty(index)) {
-                            $errorBlock.append("<strong>" + data.errors[item][index] + "</strong>");
+                    if ($input.length && false) {
+                        let $parent = $input.parent().append("<span class=\"invalid-feedback\" role=\"alert\"></span>");
+                        let $errorBlock = $parent.find('.invalid-feedback');
+                        $input.toggleClass('is-invalid');
+                        for (index in data.errors[item]) {
+                            if (data.errors[item].hasOwnProperty(index)) {
+                                $errorBlock.append("<strong>" + data.errors[item][index] + "</strong>");
+                            }
                         }
+                    }
+                    else {
+                        let messages = "<div class=\"alert alert-danger\" role=\"alert\">" +
+                            "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">" +
+                            "<span aria-hidden=\"true\">&times;</span>" +
+                            "</button>";
+                        for (index in data.errors[item]) {
+                            if (data.errors[item].hasOwnProperty(index)) {
+                                messages += data.errors[item][index] + "<br>";
+                            }
+                        }
+                        messages += "</div>";
+                        $(messages).prependTo($form);
                     }
                 }
             })

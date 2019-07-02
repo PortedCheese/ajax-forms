@@ -5,6 +5,7 @@ namespace PortedCheese\AjaxForms\Http\Controllers\Site;
 use App\AjaxForm;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -36,8 +37,21 @@ class FormController extends Controller
             return response()
                 ->json($this->prepareMessages());
         }
-        $rules = [];
-        $mesasges = [];
+        $rules = [
+            'geo_check' => "hidden_captcha",
+        ];
+        $mesasges = [
+            'geo_check.hidden_captcha' => "Ошибка заполнения",
+        ];
+        if (env("PRIVACY_POLICY")) {
+            $rules['privacy_policy'] = "accepted";
+            $mesasges['privacy_policy.accepted'] = "Требуется согласие с политикой конфиденциальности";
+        }
+        if (env("RECAPTCHA_ENABLED") && ! Auth::check()) {
+            $rules["g-recaptcha-response"] = 'required|google_captcha';
+            $mesasges['g-recaptcha-response.required'] = "Подтвердите что Вы не робот";
+            $mesasges['g-recaptcha-response.hidden_captcha'] = "Ошибка подтверждения";
+        }
         foreach ($form->fields as $field) {
             $pivot = $field->pivot;
             if (! $pivot->required) {
