@@ -4,27 +4,45 @@
     });
 
     function changeForms() {
-        let $forms = $('.sending-form');
+        let $forms = $('.sending-form-custom');
         $forms.each(function (index, element) {
             $(element).on('submit', function (event) {
                 event.preventDefault();
-                clickElement(event);
+                clickElement(event, false);
             });
+        });
+        $forms = $('.sending-form');
+        $forms.each(function (index, element) {
+            $(element)
+                .find("input[type='submit']")
+                .click(function (event) {
+                    event.preventDefault();
+                    clickElement(event, true);
+                });
         });
     }
 
-    function clickElement(event) {
-        let $form = $(event.target);
-        let $submit = $form.find("input[type='submit']");
-        if (! $submit.length) {
-            $submit = $form.find("button[type='submit']");
+    function clickElement(event, input) {
+        let $form = false;
+        let $submit = false;
+        if (input) {
+            $submit = $(event.target);
+            $form = $submit.parent('form');
         }
-        let submitAttr = getAttributes($submit);
-        if (submitAttr.hasOwnProperty('data-target-submit')) {
-            $submit = $(submitAttr['data-target-submit']);
+        else {
+            $form = $(event.target);
+            $submit = $form.find("input[type='submit']");
+            if (! $submit.length) {
+                $submit = $form.find("button[type='submit']");
+            }
+            let submitAttr = getAttributes($submit);
+            if (submitAttr.hasOwnProperty('data-target-submit')) {
+                $submit = $(submitAttr['data-target-submit']);
+            }
         }
         let formData = new FormData($form[0]);
         let formAttr = getAttributes($form);
+        let formName = formAttr.hasOwnProperty('data-name') ? formAttr['data-name'] : formAttr['name']
 
         $submit.attr('disabled', 'disabled');
         $submit.append("<i class=\"loader fas fa-spinner fa-spin\"></i>");
@@ -37,7 +55,7 @@
         });
 
         axios
-            .post("/ajax-forms/" + formAttr.name, formData)
+            .post("/ajax-forms/" + formName, formData)
             .then(response => {
                 let data = response.data;
                 if (data.messages.length) {
