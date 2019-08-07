@@ -29,4 +29,13 @@ class AjaxFormCreateRequest extends FormRequest
             'email' => 'nullable|email',
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'title' => "Заголовок",
+            'name' => "Имя формы",
+            'email' => "E-mail",
+        ];
+    }
 }

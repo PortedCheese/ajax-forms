@@ -47,7 +47,7 @@ class AjaxFormSubmissionNotification extends Notification
         return (new MailMessage)
                     ->subject("Отправка формы {$form->title}")
                     ->greeting('Здравствуйте!')
-                    ->line('На сайте было зарегистрированно обращение.')
+                    ->line('На сайте было зарегистрировано обращение.')
                     ->action(
                         'Обращения',
                         route('admin.ajax-forms.submissions', ['form' => $form])

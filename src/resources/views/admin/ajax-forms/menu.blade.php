@@ -26,10 +26,11 @@
                 Настройки
             </a>
         @endrole
+        @inject('string', 'Illuminate\Support\Str')
         @foreach($ajaxForms as $form)
             <a href="{{ route('admin.ajax-forms.submissions', ['form' => $form]) }}"
                class="dropdown-item">
-               {{ $form->title }}
+                {{ $string->limit($form->title, 20) }}
             </a>
         @endforeach
     </div>

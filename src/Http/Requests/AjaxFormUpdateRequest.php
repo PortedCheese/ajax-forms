@@ -28,4 +28,12 @@ class AjaxFormUpdateRequest extends FormRequest
             'email' => 'nullable|email',
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'title' => "Заголовок",
+            'email' => "E-mail",
+        ];
+    }
 }
