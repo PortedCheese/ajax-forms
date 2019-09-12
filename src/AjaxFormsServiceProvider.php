@@ -28,7 +28,7 @@ class AjaxFormsServiceProvider extends ServiceProvider
 
         // Assets.
         $this->publishes([
-            __DIR__ . '/resources/assets/js' => public_path('js/'),
+            __DIR__ . '/resources/assets/js' => resource_path('js/vendor/'),
         ], 'public');
 
         // Console.

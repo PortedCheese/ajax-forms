@@ -42,6 +42,10 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
         'useOwnAdminRoutes' => false,
     ];
 
+    protected $jsIncludes = [
+        "app" => ["form"]
+    ];
+
     protected $dir = __DIR__;
 
     /**
@@ -64,6 +68,7 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
         if (! $this->option('menu')) {
             $this->exportModels();
             $this->makeConfig();
+            $this->makeJsIncludes('app');
         }
         $this->makeMenu();
     }
