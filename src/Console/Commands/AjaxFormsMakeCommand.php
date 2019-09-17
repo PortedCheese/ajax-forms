@@ -87,7 +87,7 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
             'title' => $title,
             'template' => "ajax-forms::admin.ajax-forms.menu",
             'url' => "#",
-            'class' => '@fab fa-wpforms',
+            'ico' => 'fab fa-wpforms',
             'menu_id' => $menu->id,
         ];
 
