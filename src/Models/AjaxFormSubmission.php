@@ -2,11 +2,13 @@
 
 namespace PortedCheese\AjaxForms\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Notification;
 use PortedCheese\AjaxForms\Notifications\AjaxFormSubmissionNotification;
+use App\AjaxFormValue;
+use App\AjaxForm;
 
 class AjaxFormSubmission extends Model
 {
@@ -21,11 +23,11 @@ class AjaxFormSubmission extends Model
     {
         parent::boot();
 
-        static::created(function ($submission) {
+        static::created(function (\App\AjaxFormSubmission $submission) {
             $submission->notify(new AjaxFormSubmissionNotification($submission));
         });
 
-        static::deleting(function ($submission) {
+        static::deleting(function (\App\AjaxFormSubmission $submission) {
             foreach ($submission->values as $value) {
                 $value->delete();
             }
@@ -50,7 +52,7 @@ class AjaxFormSubmission extends Model
      */
     public function values()
     {
-        return $this->hasMany("PortedCheese\AjaxForms\Models\AjaxFormValue", 'submission_id');
+        return $this->hasMany(AjaxFormValue::class, 'submission_id');
     }
 
     /**
@@ -60,7 +62,7 @@ class AjaxFormSubmission extends Model
      */
     public function author()
     {
-        return $this->belongsTo("App\User", 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
@@ -70,7 +72,7 @@ class AjaxFormSubmission extends Model
      */
     public function form()
     {
-        return $this->belongsTo("PortedCheese\AjaxForms\Models\AjaxForm");
+        return $this->belongsTo(AjaxForm::class);
     }
 
     /**
@@ -98,7 +100,7 @@ class AjaxFormSubmission extends Model
         else {
             $user = NULL;
         }
-        $submission = AjaxFormSubmission::create([
+        $submission = \App\AjaxFormSubmission::create([
             'user_id' => $user,
             'form_id' => $form->id,
         ]);

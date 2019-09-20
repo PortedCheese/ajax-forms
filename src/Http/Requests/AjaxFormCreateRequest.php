@@ -2,6 +2,7 @@
 
 namespace PortedCheese\AjaxForms\Http\Requests;
 
+use App\AjaxForm;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AjaxFormCreateRequest extends FormRequest
@@ -23,19 +24,11 @@ class AjaxFormCreateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'title' => 'required|min:2',
-            'name' => 'required|min:4|unique:ajax_forms,name',
-            'email' => 'nullable|email',
-        ];
+        return AjaxForm::requestAjaxFormCreate($this);
     }
 
     public function attributes()
     {
-        return [
-            'title' => "Заголовок",
-            'name' => "Имя формы",
-            'email' => "E-mail",
-        ];
+        return AjaxForm::requestAjaxFormCreate($this, true);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace PortedCheese\AjaxForms\Http\Requests;
 
+use App\AjaxFormField;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FormFieldCreateRequest extends FormRequest
@@ -23,11 +24,11 @@ class FormFieldCreateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'title' => 'required|min:2',
-            'exists' => 'nullable|required_without_all:name,type|exists:ajax_form_fields,id',
-            'type' => 'nullable|required_without:exists',
-            'name' => 'nullable|required_without:exists|min:4|unique:ajax_form_fields,name',
-        ];
+        return AjaxFormField::requestFormFieldCreate($this);
+    }
+
+    public function attributes()
+    {
+        return AjaxFormField::requestFormFieldCreate($this, true);
     }
 }

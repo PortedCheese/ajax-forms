@@ -4,7 +4,10 @@ namespace PortedCheese\AjaxForms\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\AjaxFormSubmission;
+use App\AjaxFormField;
+use PortedCheese\AjaxForms\Http\Requests\AjaxFormCreateRequest;
+use PortedCheese\AjaxForms\Http\Requests\AjaxFormUpdateRequest;
 
 class AjaxForm extends Model
 {
@@ -20,7 +23,7 @@ class AjaxForm extends Model
     {
         parent::boot();
 
-        static::deleting(function ($form) {
+        static::deleting(function (\App\AjaxForm $form) {
             foreach ($form->fields as $field) {
                 $form->fields()->detach($field);
                 $field->checkFormsOnDetach();
@@ -35,7 +38,7 @@ class AjaxForm extends Model
      */
     public function submissions()
     {
-        return $this->hasMany("PortedCheese\AjaxForms\Models\AjaxFormSubmission", 'form_id');
+        return $this->hasMany(AjaxFormSubmission::class, 'form_id');
     }
 
     /**
@@ -45,7 +48,7 @@ class AjaxForm extends Model
      */
     public function fields()
     {
-        return $this->belongsToMany('PortedCheese\AjaxForms\Models\AjaxFormField')
+        return $this->belongsToMany(AjaxFormField::class)
             ->withPivot('title', 'required')
             ->withTimestamps();
     }
@@ -58,6 +61,53 @@ class AjaxForm extends Model
     public function getRouteKeyName()
     {
         return 'name';
+    }
+
+    /**
+     * Валидация создания формы.
+     *
+     * @param AjaxFormCreateRequest $validator
+     * @param bool $attr
+     * @return array
+     */
+    public static function requestAjaxFormCreate(AjaxFormCreateRequest $validator, $attr = false)
+    {
+        if ($attr) {
+            return [
+                'title' => "Заголовок",
+                'name' => "Имя формы",
+                'email' => "E-mail",
+            ];
+        }
+        else {
+            return [
+                'title' => 'required|min:2',
+                'name' => 'required|min:4|unique:ajax_forms,name',
+                'email' => 'nullable|email',
+            ];
+        }
+    }
+
+    /**
+     * Обновление формы.
+     * @param AjaxFormUpdateRequest $validator
+     * @param bool $attr
+     * @return array
+     */
+    public static function requestAjaxFormUpdate(AjaxFormUpdateRequest $validator, $attr = false)
+    {
+        if ($attr) {
+            return [
+                'title' => "Заголовок",
+                'email' => "E-mail",
+            ];
+        }
+        else {
+            return [
+                'title' => 'required|min:2',
+                'email' => 'nullable|email',
+            ];
+        }
     }
 
     /**

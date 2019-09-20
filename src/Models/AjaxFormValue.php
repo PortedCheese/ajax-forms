@@ -4,6 +4,8 @@ namespace PortedCheese\AjaxForms\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use App\AjaxFormSubmission;
+use App\AjaxFormField;
 
 class AjaxFormValue extends Model
 {
@@ -34,7 +36,7 @@ class AjaxFormValue extends Model
      */
     public function submission()
     {
-        return $this->belongsTo("PortedCheese\AjaxForms\Models\AjaxFormSubmission", 'submission_id');
+        return $this->belongsTo(AjaxFormSubmission::class, 'submission_id');
     }
 
     /**
@@ -44,7 +46,7 @@ class AjaxFormValue extends Model
      */
     public function field()
     {
-        return $this->belongsTo("PortedCheese\AjaxForms\Models\AjaxFormField", 'field_id');
+        return $this->belongsTo(AjaxFormField::class, 'field_id');
     }
 
     /**
@@ -71,7 +73,7 @@ class AjaxFormValue extends Model
         else {
             $str = $value;
         }
-        AjaxFormValue::create([
+        \App\AjaxFormValue::create([
             'submission_id' => $submission->id,
             'field_id' => $field->id,
             'long_value' => $long,
