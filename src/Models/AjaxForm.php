@@ -136,7 +136,8 @@ class AjaxForm extends Model
                 ];
             }
         }
-        AjaxFormSubmission::createForFormByFields($this, $fields);
+        $form = \App\AjaxForm::find($this->id);
+        AjaxFormSubmission::createForFormByFields($form, $fields);
     }
 
     /**

@@ -11,8 +11,12 @@ use Illuminate\Support\Facades\Validator;
 
 class FormController extends Controller
 {
+    protected $result;
+    
     public function __construct()
     {
+        parent::__construct();
+        
         $this->result = [
             'success' => false,
             'messages' => [],
@@ -21,16 +25,19 @@ class FormController extends Controller
 
     /**
      * Отправка формы.
-     *
+     * 
      * @param Request $request
      * @param $form
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
      */
     public function submit(Request $request, $form)
     {
         // Ищем нужную форму.
         try {
-            $form = AjaxForm::where('name', $form)->firstOrFail();
+            $form = AjaxForm::query()
+                ->where('name', $form)
+                ->firstOrFail();
         }
         catch (\Exception $e) {
             $this->result['messages'][] = "Форма не найдена";
@@ -40,17 +47,17 @@ class FormController extends Controller
         $rules = [
             'geo_check' => "hidden_captcha",
         ];
-        $mesasges = [
+        $messages = [
             'geo_check.hidden_captcha' => "Ошибка заполнения",
         ];
         if (env("PRIVACY_POLICY")) {
             $rules['privacy_policy'] = "accepted";
-            $mesasges['privacy_policy.accepted'] = "Требуется согласие с политикой конфиденциальности";
+            $messages['privacy_policy.accepted'] = "Требуется согласие с политикой конфиденциальности";
         }
         if (env("RECAPTCHA_ENABLED") && ! Auth::check()) {
             $rules["g-recaptcha-response"] = 'required|google_captcha';
-            $mesasges['g-recaptcha-response.required'] = "Подтвердите что Вы не робот";
-            $mesasges['g-recaptcha-response.hidden_captcha'] = "Ошибка подтверждения";
+            $messages['g-recaptcha-response.required'] = "Подтвердите что Вы не робот";
+            $messages['g-recaptcha-response.hidden_captcha'] = "Ошибка подтверждения";
         }
         foreach ($form->fields as $field) {
             $pivot = $field->pivot;
@@ -58,10 +65,10 @@ class FormController extends Controller
                 continue;
             }
             $rules[$field->name] = "required";
-            $mesasges[$field->name . ".required"] = "Поле {$pivot->title} обязательно для заполнения";
+            $messages[$field->name . ".required"] = "Поле {$pivot->title} обязательно для заполнения";
         }
         if (! empty($rules)) {
-            Validator::make($request->all(), $rules, $mesasges)
+            Validator::make($request->all(), $rules, $messages)
                 ->validate();
             $this->result['success'] = true;
         }

@@ -4,7 +4,6 @@ namespace PortedCheese\AjaxForms\Console\Commands;
 
 use App\Menu;
 use App\MenuItem;
-use Illuminate\Console\Command;
 use PortedCheese\BaseSettings\Console\Commands\BaseConfigModelCommand;
 
 class AjaxFormsMakeCommand extends BaseConfigModelCommand
@@ -24,29 +23,22 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
      */
     protected $description = 'Settings for ajax forms';
 
+    protected $packageName = "AjaxForms";
+
     /**
      * The models that need to be exported.
      * @var array
      */
-    protected $models = [
-        'AjaxForm.stub' => 'AjaxForm.php',
-        'AjaxFormField.stub' => 'AjaxFormField.php',
-        'AjaxFormSubmission.stub' => 'AjaxFormSubmission.php',
-        'AjaxFormValue.stub' => 'AjaxFormValue.php',
-    ];
+    protected $models = ['AjaxForm', 'AjaxFormField', 'AjaxFormSubmission', 'AjaxFormValue',];
 
-    protected $configName = 'ajax-forms';
-
-    protected $configValues = [
-        'useOwnSiteRoutes' => false,
-        'useOwnAdminRoutes' => false,
+    protected $controllers = [
+        "Admin" => ["FieldController", "FormController",],
+        "Site" => ["FormController",],
     ];
 
     protected $jsIncludes = [
         "app" => ["form"]
     ];
-
-    protected $dir = __DIR__;
 
     /**
      * Create a new command instance.
@@ -60,14 +52,15 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
         if (! $this->option('menu')) {
+            $this->exportControllers("Admin");
+            $this->exportControllers("Site");
+
             $this->exportModels();
-            $this->makeConfig();
+
             $this->makeJsIncludes('app');
         }
         $this->makeMenu();
@@ -76,7 +69,9 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
     protected function makeMenu()
     {
         try {
-            $menu = Menu::where('key', 'admin')->firstOrFail();
+            $menu = Menu::query()
+                ->where('key', 'admin')
+                ->firstOrFail();
         }
         catch (\Exception $e) {
             return;
@@ -97,7 +92,7 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
             $this->info("Элемент меню '$title' обновлен");
         }
         catch (\Exception $e) {
-            $menuItem = MenuItem::create($itemData);
+            MenuItem::create($itemData);
             $this->info("Элемент меню '$title' создан");
         }
     }

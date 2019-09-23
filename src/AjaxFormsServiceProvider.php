@@ -14,6 +14,7 @@ class AjaxFormsServiceProvider extends ServiceProvider
     {
         // Подключение роутов.
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
+        $this->loadRoutesFrom(__DIR__ . '/routes/admin.php');
 
         // Подключение миграций.
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
@@ -35,7 +36,6 @@ class AjaxFormsServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 AjaxFormsMakeCommand::class,
-                AjaxFormsOverrideCommand::class,
             ]);
         }
     }

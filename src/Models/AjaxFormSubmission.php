@@ -24,7 +24,7 @@ class AjaxFormSubmission extends Model
         parent::boot();
 
         static::created(function (\App\AjaxFormSubmission $submission) {
-            $submission->notify(new AjaxFormSubmissionNotification($submission));
+            $submission->notify($submission->getNotifyClass($submission));
         });
 
         static::deleting(function (\App\AjaxFormSubmission $submission) {
@@ -32,6 +32,17 @@ class AjaxFormSubmission extends Model
                 $value->delete();
             }
         });
+    }
+
+    /**
+     * Уведомление.
+     *
+     * @param \App\AjaxFormSubmission $submission
+     * @return AjaxFormSubmissionNotification
+     */
+    public function getNotifyClass(\App\AjaxFormSubmission $submission)
+    {
+        return new AjaxFormSubmissionNotification($submission);
     }
 
     /**
