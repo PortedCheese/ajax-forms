@@ -87,7 +87,9 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
         ];
 
         try {
-            $menuItem = MenuItem::where('title', $title)->firstOrFail();
+            $menuItem = MenuItem::query()
+                ->where('title', $title)
+                ->firstOrFail();
             $menuItem->update($itemData);
             $this->info("Элемент меню '$title' обновлен");
         }

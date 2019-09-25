@@ -83,7 +83,7 @@ class AjaxForm extends Model
             return [
                 'title' => 'required|min:2',
                 'name' => 'required|min:4|unique:ajax_forms,name',
-                'email' => 'nullable|email',
+                'email' => 'required|email',
             ];
         }
     }
@@ -105,7 +105,7 @@ class AjaxForm extends Model
         else {
             return [
                 'title' => 'required|min:2',
-                'email' => 'nullable|email',
+                'email' => 'required|email',
             ];
         }
     }

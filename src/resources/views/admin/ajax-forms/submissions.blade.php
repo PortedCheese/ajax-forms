@@ -50,17 +50,24 @@
                                     {{ $submission->author }}
                                 </td>
                                 <td>
-                                    <confirm-delete-model-button model-id="{{ $submission->model->id }}">
-                                        <template slot="delete">
+                                    <div role="toolbar" class="btn-toolbar">
+                                        <div class="btn-group mr-1">
+                                            <button type="button" class="btn btn-danger" data-confirm="{{ "delete-submission-form-{$submission->model->id}" }}">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <confirm-form :id="'{{ "delete-submission-form-{$submission->model->id}" }}'">
+                                        <template>
                                             <form action="{{ route('admin.ajax-forms.submissions.destroy', ['submission' => $submission->model]) }}"
-                                                  id="delete-{{ $submission->model->id }}"
+                                                  id="delete-submission-form-{{ $submission->model->id }}"
                                                   class="btn-group"
                                                   method="post">
                                                 @csrf
                                                 <input type="hidden" name="_method" value="DELETE">
                                             </form>
                                         </template>
-                                    </confirm-delete-model-button>
+                                    </confirm-form>
                                 </td>
                             </tr>
                         @endforeach

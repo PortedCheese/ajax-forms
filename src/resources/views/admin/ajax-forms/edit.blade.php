@@ -14,18 +14,33 @@
                     @method('put')
 
                     <div class="form-group">
-                        <label for="title">Заголовок</label>
+                        <label for="title">Заголовок <span class="text-danger">*</span></label>
                         <input type="text"
                                id="title"
-                               name="title"
-                               value="{{ old('title') ? old('title') : $form->title }}"
                                required
-                               class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}">
-                        @if ($errors->has('title'))
-                            <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('title') }}</strong>
-                    </span>
-                        @endif
+                               name="title"
+                               value="{{ old("title", $form->title) }}"
+                               class="form-control @error("title") is-invalid @enderror">
+                        @error("title")
+                            <div class="invalid-feedback" role="alert">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">E-mail <span class="text-danger">*</span></label>
+                        <input type="email"
+                               required
+                               id="email"
+                               name="email"
+                               value="{{ old("email", $form->email) }}"
+                               class="form-control @error("email") is-invalid @enderror">
+                        @error("email")
+                            <div class="invalid-feedback" role="alert">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
 
                     <div class="form-group">
@@ -44,20 +59,6 @@
                                name="fail_message"
                                value="{{ old('fail_message') ? old('fail_message') : $form->fail_message }}"
                                class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">E-mail</label>
-                        <input type="email"
-                               id="email"
-                               name="email"
-                               value="{{ old('email') ? old('email') : $form->email }}"
-                               class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}">
-                        @if ($errors->has('email'))
-                            <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('email') }}</strong>
-                    </span>
-                        @endif
                     </div>
 
                     <div class="btn-group"

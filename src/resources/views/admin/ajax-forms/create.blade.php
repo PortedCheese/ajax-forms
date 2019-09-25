@@ -7,36 +7,53 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('admin.ajax-forms.store') }}" method="post" class="col-12">
+                <form action="{{ route('admin.ajax-forms.store') }}" method="post">
                     @csrf
-                    <div class="form-group">
-                        <label for="name">Имя</label>
-                        <input type="text"
-                               id="name"
-                               name="name"
-                               value="{{ old('name') }}"
-                               required
-                               class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}">
-                        @if ($errors->has('name'))
-                            <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('name') }}</strong>
-                    </span>
-                        @endif
-                    </div>
 
                     <div class="form-group">
-                        <label for="title">Заголовок</label>
+                        <label for="title">Заголовок <span class="text-danger">*</span></label>
                         <input type="text"
+                               required
                                id="title"
                                name="title"
                                value="{{ old('title') }}"
+                               class="form-control @error("title") is-invalid @enderror">
+                        @error("title")
+                            <div class="invalid-feedback" role="alert">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Имя <span class="text-danger">*</span></label>
+                        <input type="text"
+                               id="name"
                                required
-                               class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}">
-                        @if ($errors->has('title'))
-                            <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('title') }}</strong>
-                    </span>
-                        @endif
+                               name="name"
+                               value="{{ old('name') }}"
+                               class="form-control @error("name") is-invalid @enderror">
+                        <small class="form-text text-muted">Аттрибут data-name (name) из формы</small>
+                        @error("name")
+                            <div class="invalid-feedback" role="alert">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">E-mail <span class="text-danger">*</span></label>
+                        <input type="email"
+                               required
+                               id="email"
+                               name="email"
+                               value="{{ old('email') }}"
+                               class="form-control @error("email") is-invalid @enderror">
+                        @error("email")
+                        <div class="invalid-feedback" role="alert">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </div>
 
                     <div class="form-group">
@@ -55,20 +72,6 @@
                                name="fail_message"
                                value="{{ old('fail_message') }}"
                                class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">E-mail</label>
-                        <input type="email"
-                               id="email"
-                               name="email"
-                               value="{{ old('email') }}"
-                               class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}">
-                        @if ($errors->has('email'))
-                            <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('email') }}</strong>
-                    </span>
-                        @endif
                     </div>
 
                     <div class="btn-group"

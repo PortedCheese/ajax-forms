@@ -7,21 +7,22 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('admin.ajax-fields.store', ['form' => $form]) }}" method="post" class="col-12">
+                <form action="{{ route('admin.ajax-fields.store', ['form' => $form]) }}" method="post">
                     @csrf
+
                     <div class="form-group">
-                        <label for="title">Заголовок</label>
+                        <label for="title">Заголовок <span class="text-danger">*</span></label>
                         <input type="text"
+                               required
                                id="title"
                                name="title"
                                value="{{ old('title') }}"
-                               required
-                               class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}">
-                        @if ($errors->has('title'))
-                            <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('title') }}</strong>
-                    </span>
-                        @endif
+                               class="form-control @error("title") is-invalid @enderror">
+                        @error("title")
+                            <div class="invalid-feedback" role="alert">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
 
                     @if($available->count())
@@ -29,22 +30,20 @@
                             <label for="exists">Выбрать из существующих</label>
                             <select name="exists"
                                     id="exists"
-                                    class="form-control">
-                                <option value="">--Выберите--</option>
-                                @foreach($available as $field)
-                                    <option value="{{ $field->id }}"
-                                            @if(old('exists'))
-                                            selected
-                                            @endif>
-                                        {{ $field->name }} | {{ $field->type }}
+                                    class="form-control custom-select @error("exists") is-invalid @enderror">
+                                <option value="">Выберите...</option>
+                                @foreach($available as $item)
+                                    <option value="{{ $item->id }}"
+                                            {{ old("exists") == $item->id ? "selected" : "" }}>
+                                        {{ $item->name }} | {{ $item->type }}
                                     </option>
                                 @endforeach
                             </select>
-                            @if ($errors->has('exists'))
-                                <span class="invalid-feedback" role="alert">
-                            <strong>{{ $errors->first('exists') }}</strong>
-                        </span>
-                            @endif
+                            @error("exists")
+                                <div class="invalid-feedback" role="alert">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                     @endif
 
@@ -54,12 +53,13 @@
                                id="name"
                                name="name"
                                value="{{ old('name') }}"
-                               class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}">
-                        @if ($errors->has('name'))
-                            <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('name') }}</strong>
-                    </span>
-                        @endif
+                               class="form-control @error("name") is-invalid @enderror">
+                        <small class="form-text text-muted">Аттрибут name из поля</small>
+                        @error("name")
+                            <div class="invalid-feedback" role="alert">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
 
                     <div class="form-group">
@@ -86,8 +86,12 @@
 
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" name="required" id="requiredCheck">
-                            <label class="custom-control-label" for="requiredCheck">Required</label>
+                            <input type="checkbox"
+                                   class="custom-control-input"
+                                   id="required"
+                                   {{ old("required") ? "checked" : "" }}
+                                   name="required">
+                            <label class="custom-control-label" for="required">Required</label>
                         </div>
                     </div>
 

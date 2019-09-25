@@ -24,49 +24,6 @@ class FormController extends Controller
         $this->filterFields = new FilterFields();
     }
 
-    public function settings()
-    {
-        $config = siteconf()->get('ajax-forms');
-        return view("ajax-forms::admin.ajax-forms.settings", [
-            'config' => (object) $config,
-        ]);
-    }
-
-    /**
-     * Сохранить настройки.
-     *
-     * @param NewsSettingsRequest $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function saveSettings(Request $request)
-    {
-        $config = siteconf()->get('ajax-forms');
-        foreach ($config as $key => $value) {
-            if ($request->has($key)) {
-                $config[$key] = $request->get($key);
-            }
-        }
-
-        if ($request->has('own-admin')) {
-            $config['useOwnAdminRoutes'] = true;
-        }
-        else {
-            $config['useOwnAdminRoutes'] = false;
-        }
-
-        if ($request->has('own-site')) {
-            $config['useOwnSiteRoutes'] = true;
-        }
-        else {
-            $config['useOwnSiteRoutes'] = false;
-        }
-
-        siteconf()->save('ajax-forms', $config);
-        return redirect()
-            ->back()
-            ->with('success', "Конфигурация обновлена");
-    }
-
     /**
      * Список всех форм.
      *

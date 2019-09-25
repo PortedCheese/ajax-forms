@@ -18,28 +18,23 @@
                         <input type="text"
                                id="title"
                                name="title"
-                               value="{{ old('title') ? old('title') : $pivot->title }}"
-                               required
-                               class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}">
-                        @if ($errors->has('title'))
-                            <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('title') }}</strong>
-                    </span>
-                        @endif
+                               value="{{ old("title", $pivot->title) }}"
+                               class="form-control @error("title") is-invalid @enderror">
+                        @error("title")
+                            <div class="invalid-feedback" role="alert">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
 
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
                             <input type="checkbox"
-                                   @if (old('requred'))
-                                   checked
-                                   @elseif ($pivot->required)
-                                   checked
-                                   @endif
                                    class="custom-control-input"
-                                   name="required"
-                                   id="requiredCheck">
-                            <label class="custom-control-label" for="requiredCheck">Required</label>
+                                   id="required"
+                                   {{ (! count($errors->all()) && $pivot->required) || old("required") ? "checked" : "" }}
+                                   name="required">
+                            <label class="custom-control-label" for="required">Required</label>
                         </div>
                     </div>
 

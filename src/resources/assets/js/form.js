@@ -42,7 +42,7 @@
         }
         let formData = new FormData($form[0]);
         let formAttr = getAttributes($form);
-        let formName = formAttr.hasOwnProperty('data-name') ? formAttr['data-name'] : formAttr['name']
+        let formName = formAttr.hasOwnProperty('data-name') ? formAttr['data-name'] : formAttr['name'];
 
         $submit.attr('disabled', 'disabled');
         $submit.append("<i class=\"loader fas fa-spinner fa-spin\"></i>");
