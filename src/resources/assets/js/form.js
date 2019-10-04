@@ -27,7 +27,7 @@
         let $submit = false;
         if (input) {
             $submit = $(event.target);
-            $form = $submit.parent('form');
+            $form = $submit.parents('form');
         }
         else {
             $form = $(event.target);
@@ -42,10 +42,16 @@
         }
         let formData = new FormData($form[0]);
         let formAttr = getAttributes($form);
-        let formName = formAttr.hasOwnProperty('data-name') ? formAttr['data-name'] : formAttr['name'];
+        let formName = formAttr.hasOwnProperty('data-name') ? formAttr['data-name'] : formAttr['name']
 
         $submit.attr('disabled', 'disabled');
-        $submit.append("<i class=\"loader fas fa-spinner fa-spin\"></i>");
+        if (input) {
+            var buf = $submit.attr("value");
+            $submit.attr("value", "Обработка");
+        }
+        else {
+            $submit.append("<i class=\"loader fas fa-spinner fa-spin\"></i>");
+        }
         $form.find('.invalid-feedback').each(function (inx, el) {
             $(el).parent().find('input').removeClass('is-invalid');
             $(el).remove();
@@ -96,7 +102,12 @@
             })
             .finally(() => {
                 $submit.removeAttr('disabled');
-                $submit.find(".loader").remove();
+                if (input) {
+                    $submit.attr("value", buf);
+                }
+                else {
+                    $submit.find(".loader").remove();
+                }
             });
     }
 
