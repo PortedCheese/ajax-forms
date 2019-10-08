@@ -50,11 +50,11 @@ class FormController extends Controller
         $messages = [
             'geo_check.hidden_captcha' => "Ошибка заполнения",
         ];
-        if (env("PRIVACY_POLICY")) {
+        if (siteconf()->get("ajax-forms", "privacyPolicy")) {
             $rules['privacy_policy'] = "accepted";
             $messages['privacy_policy.accepted'] = "Требуется согласие с политикой конфиденциальности";
         }
-        if (env("RECAPTCHA_ENABLED") && ! Auth::check()) {
+        if (siteconf()->get("ajax-forms", "recaptchaEnabled") && ! Auth::check()) {
             $rules["g-recaptcha-response"] = 'required|google_captcha';
             $messages['g-recaptcha-response.required'] = "Подтвердите что Вы не робот";
             $messages['g-recaptcha-response.hidden_captcha'] = "Ошибка подтверждения";

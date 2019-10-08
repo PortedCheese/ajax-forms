@@ -14,7 +14,12 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
      * @var string
      */
     protected $signature = 'make:ajax-forms
-                                {--menu : Only config menu}';
+                                {--all : Run all}
+                                {--controllers : Export controllers}
+                                {--models : Export models}
+                                {--js : Include js}
+                                {--config : Create config}
+                                {--menu : Config menu}';
 
     /**
      * The console command description.
@@ -40,6 +45,17 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
         "app" => ["form"]
     ];
 
+    protected $configName = "ajax-forms";
+
+    protected $configTitle = "Формы";
+
+    protected $configTemplate = "ajax-forms::admin.settings";
+
+    protected $configValues = [
+        "privacyPolicy" => true,
+        "recaptchaEnabled" => true,
+    ];
+
     /**
      * Create a new command instance.
      *
@@ -55,15 +71,28 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
      */
     public function handle()
     {
-        if (! $this->option('menu')) {
+        $all = $this->option("all");
+
+        if ($this->option("menu") || $all) {
+            $this->makeMenu();
+        }
+
+        if ($this->option("controllers") || $all) {
             $this->exportControllers("Admin");
             $this->exportControllers("Site");
+        }
 
+        if ($this->option("models") || $all) {
             $this->exportModels();
+        }
 
+        if ($this->option('js') || $all) {
             $this->makeJsIncludes('app');
         }
-        $this->makeMenu();
+
+        if ($this->option("config") || $all) {
+            $this->makeConfig();
+        }
     }
 
     protected function makeMenu()
