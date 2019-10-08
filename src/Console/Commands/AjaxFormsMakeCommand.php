@@ -53,7 +53,7 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
 
     protected $configValues = [
         "privacyPolicy" => true,
-        "recaptchaEnabled" => true,
+        "recaptchaEnabled" => false,
     ];
 
     /**
