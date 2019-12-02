@@ -8,15 +8,13 @@
 
 ## Установка
 
-`composer require portedcheese/ajax-forms`
-
 Нужно выгрузить js, который отправляет форму с классом `sending-form` и `sending-form-custom`
 
-`php artisan vendor:publish --provider="PortedCheese\AjaxForms\AjaxFormsServiceProvider" --tag=public --force`
+    php artisan vendor:publish --provider="PortedCheese\AjaxForms\AjaxFormsServiceProvider" --tag=public --force
 
-`php artisan make:ajax-forms {--all : Run all}
+    php artisan make:ajax-forms {--all : Run all}
                              {--controllers : Export controllers}
                              {--models : Export models}
                              {--js : Include js}
                              {--config : Create config}
-                             {--menu : Config menu}`
+                             {--menu : Config menu}
