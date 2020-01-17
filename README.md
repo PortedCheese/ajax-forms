@@ -12,9 +12,18 @@
 
     php artisan vendor:publish --provider="PortedCheese\AjaxForms\AjaxFormsServiceProvider" --tag=public --force
 
-    php artisan make:ajax-forms {--all : Run all}
-                             {--controllers : Export controllers}
-                             {--models : Export models}
-                             {--js : Include js}
-                             {--config : Create config}
-                             {--menu : Config menu}
+    php artisan make:ajax-forms
+                            {--all : Run all}
+                            {--controllers : Export controllers}
+                            {--models : Export models}
+                            {--policies : Export and create rules}
+                            {--js : Include js}
+                            {--config : Create config}
+                            {--menu : Config menu}
+                             
+### Versions:
+
+    v1.2.3:
+        - Добавлены права доступа
+    Обновление:
+        - php artisan make:ajax-forms --policies
