@@ -20,7 +20,9 @@
                             @endforeach
                             <th>Дата</th>
                             <th>Автор</th>
-                            <th>Действия</th>
+                            @can("delete", \App\AjaxFormSubmission::class)
+                                <th>Действия</th>
+                            @endcan
                         </tr>
                         </thead>
                         <tbody>
@@ -49,26 +51,28 @@
                                 <td>
                                     {{ $submission->author }}
                                 </td>
-                                <td>
-                                    <div role="toolbar" class="btn-toolbar">
-                                        <div class="btn-group mr-1">
-                                            <button type="button" class="btn btn-danger" data-confirm="{{ "delete-submission-form-{$submission->model->id}" }}">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
+                                @can("delete", \App\AjaxFormSubmission::class)
+                                    <td>
+                                        <div role="toolbar" class="btn-toolbar">
+                                            <div class="btn-group mr-1">
+                                                <button type="button" class="btn btn-danger" data-confirm="{{ "delete-submission-form-{$submission->model->id}" }}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <confirm-form :id="'{{ "delete-submission-form-{$submission->model->id}" }}'">
-                                        <template>
-                                            <form action="{{ route('admin.ajax-forms.submissions.destroy', ['submission' => $submission->model]) }}"
-                                                  id="delete-submission-form-{{ $submission->model->id }}"
-                                                  class="btn-group"
-                                                  method="post">
-                                                @csrf
-                                                <input type="hidden" name="_method" value="DELETE">
-                                            </form>
-                                        </template>
-                                    </confirm-form>
-                                </td>
+                                        <confirm-form :id="'{{ "delete-submission-form-{$submission->model->id}" }}'">
+                                            <template>
+                                                <form action="{{ route('admin.ajax-forms.submissions.destroy', ['submission' => $submission->model]) }}"
+                                                      id="delete-submission-form-{{ $submission->model->id }}"
+                                                      class="btn-group"
+                                                      method="post">
+                                                    @csrf
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                </form>
+                                            </template>
+                                        </confirm-form>
+                                    </td>
+                                @endcan
                             </tr>
                         @endforeach
                         </tbody>

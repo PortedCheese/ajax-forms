@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'namespace' => 'App\Http\Controllers\Vendor\AjaxForms\Admin',
-    'middleware' => ['web', 'role:admin'],
+    'middleware' => ['web', 'super'],
     'as' => 'admin.',
     'prefix' => 'admin',
 ], function () {
@@ -32,7 +32,7 @@ Route::group([
 
 Route::group([
     'namespace' => 'App\Http\Controllers\Vendor\AjaxForms\Admin',
-    'middleware' => ['web', 'role:admin|editor'],
+    'middleware' => ['web', 'management'],
     'as' => 'admin.ajax-forms.',
     'prefix' => 'admin/ajax-forms/submissions/',
 ], function () {

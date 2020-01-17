@@ -21,6 +21,7 @@ class FormController extends Controller
 
     public function __construct()
     {
+        parent::__construct();
         $this->filterFields = new FilterFields();
     }
 
@@ -128,12 +129,15 @@ class FormController extends Controller
      * @param Request $request
      * @param AjaxForm $form
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function submissions(Request $request, AjaxForm $form)
     {
+        $this->authorize("view", AjaxFormSubmission::class);
         $headers = $form->getHeaders();
         $ids = $this->filterFields->getIds($form, $request, $headers);
-        $collection = AjaxFormSubmission::whereIn('id', $ids)
+        $collection = AjaxFormSubmission::query()
+            ->whereIn('id', $ids)
             ->orderBy('created_at', 'desc')
             ->paginate(self::PAGER)
             ->appends($request->input());
@@ -175,8 +179,16 @@ class FormController extends Controller
         ]);
     }
 
+    /**
+     * Скачать файл.
+     *
+     * @param AjaxFormSubmission $submission
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function download(AjaxFormSubmission $submission)
     {
+        $this->authorize("view", $submission);
         $path = FALSE;
         foreach ($submission->values as $value) {
             $field = $value->field;
@@ -202,6 +214,7 @@ class FormController extends Controller
      */
     public function destroySubmission(AjaxFormSubmission $submission)
     {
+        $this->authorize("delete", $submission);
         $form = $submission->form;
         $submission->delete();
         return redirect()

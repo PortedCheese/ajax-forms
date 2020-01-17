@@ -17,6 +17,7 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
                                 {--all : Run all}
                                 {--controllers : Export controllers}
                                 {--models : Export models}
+                                {--policies : Export and create rules}
                                 {--js : Include js}
                                 {--config : Create config}
                                 {--menu : Config menu}';
@@ -46,14 +47,19 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
     ];
 
     protected $configName = "ajax-forms";
-
     protected $configTitle = "Формы";
-
     protected $configTemplate = "ajax-forms::admin.settings";
-
     protected $configValues = [
         "privacyPolicy" => true,
         "recaptchaEnabled" => false,
+    ];
+
+    protected $ruleRules = [
+        [
+            "title" => "Формы (отправления)",
+            "slug" => "forms",
+            "policy" => "AjaxFormSubmissionPolicy",
+        ],
     ];
 
     /**
@@ -92,6 +98,10 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
 
         if ($this->option("config") || $all) {
             $this->makeConfig();
+        }
+
+        if ($this->option("policies") || $all) {
+            $this->makeRules();
         }
     }
 
