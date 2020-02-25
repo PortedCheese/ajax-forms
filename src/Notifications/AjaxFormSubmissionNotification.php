@@ -50,7 +50,7 @@ class AjaxFormSubmissionNotification extends Notification
                     ->line('На сайте было зарегистрировано обращение.')
                     ->action(
                         'Обращения',
-                        route('admin.ajax-forms.submissions', ['form' => $form])
+                        route('admin.ajax-forms.submissions.show', ['form' => $form])
                     );
     }
 

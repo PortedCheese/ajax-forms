@@ -113,7 +113,7 @@ class AjaxForm extends Model
     /**
      * Создать сабмит.
      *
-     * @param $userInput
+     * @param Request $request
      */
     public function makeSubmission(Request $request)
     {

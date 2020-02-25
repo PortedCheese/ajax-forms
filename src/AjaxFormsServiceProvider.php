@@ -22,11 +22,6 @@ class AjaxFormsServiceProvider extends ServiceProvider
         // Подключение шаблонов.
         $this->loadViewsFrom(__DIR__ . '/resources/views', 'ajax-forms');
 
-        // Переменная для меню форм.
-        view()->composer('ajax-forms::admin.ajax-forms.menu', function ($view) {
-            $view->with('ajaxForms', AjaxForm::all());
-        });
-
         // Assets.
         $this->publishes([
             __DIR__ . '/resources/assets/js' => resource_path('js/vendor/'),

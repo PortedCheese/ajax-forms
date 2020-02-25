@@ -4,6 +4,8 @@
 @section('header-title', "Просмотр формы {$form->title}")
 
 @section('admin')
+    @include("ajax-forms::admin.ajax-forms.pills")
+
     <div class="col-12">
         <div class="card">
             <div class="card-body">

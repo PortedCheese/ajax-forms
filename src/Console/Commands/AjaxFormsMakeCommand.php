@@ -18,6 +18,7 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
                                 {--controllers : Export controllers}
                                 {--models : Export models}
                                 {--policies : Export and create rules}
+                                {--only-default : Create default rules}
                                 {--js : Include js}
                                 {--config : Create config}
                                 {--menu : Config menu}';
@@ -38,7 +39,7 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
     protected $models = ['AjaxForm', 'AjaxFormField', 'AjaxFormSubmission', 'AjaxFormValue',];
 
     protected $controllers = [
-        "Admin" => ["FieldController", "FormController",],
+        "Admin" => ["FieldController", "FormController", "SubmissionController"],
         "Site" => ["FormController",],
     ];
 

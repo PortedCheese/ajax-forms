@@ -30,16 +30,19 @@ Route::group([
     });
 });
 
+// Отправления.
 Route::group([
     'namespace' => 'App\Http\Controllers\Vendor\AjaxForms\Admin',
     'middleware' => ['web', 'management'],
-    'as' => 'admin.ajax-forms.',
-    'prefix' => 'admin/ajax-forms/submissions/',
+    'as' => 'admin.ajax-forms.submissions.',
+    'prefix' => 'admin/ajax-forms/submissions',
 ], function () {
-    Route::get('{form}', "FormController@submissions")
-        ->name('submissions');
-    Route::delete('{submission}', "FormController@destroySubmission")
-        ->name('submissions.destroy');
-    Route::get('file/{submission}', "FormController@download")
-        ->name('submission.download');
+    Route::get('/list', "SubmissionController@index")
+        ->name('index');
+    Route::get('/{form}', "SubmissionController@show")
+        ->name('show');
+    Route::delete('/{submission}', "SubmissionController@destroy")
+        ->name('destroy');
+    Route::get('/file/{submission}', "SubmissionController@download")
+        ->name('download');
 });

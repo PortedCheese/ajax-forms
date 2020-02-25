@@ -1,36 +1,32 @@
 @can("viewAny", \App\AjaxFormSubmission::class)
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle{{ strstr($currentRoute, 'admin.ajax-forms') !== FALSE ? ' active' : '' }}"
-           href="#"
-           id="user-dropdown"
-           role="button"
-           data-toggle="dropdown"
-           aria-haspopup="true"
-           aria-expanded="false">
+    @can('settings-management')
+        <li class="nav-item">
+            <a class="nav-link{{ in_array($currentRoute, [
+                            "admin.ajax-forms.index",
+                            "admin.ajax-forms.create",
+                            "admin.ajax-forms.show",
+                            "admin.ajax-forms.edit"
+                        ]) ? ' active' : '' }}"
+               href="{{ route('admin.ajax-forms.index') }}">
+                @isset($ico)
+                    <i class="{{ $ico }}"></i>
+                @endisset
+                Формы
+            </a>
+        </li>
+    @endcan
+    <li class="nav-item">
+        <a href="{{ route("admin.ajax-forms.submissions.index") }}"
+           class="nav-link{{ strstr($currentRoute, 'admin.ajax-forms.submissions.') !== FALSE ? ' active' : '' }}">
             @isset($ico)
                 <i class="{{ $ico }}"></i>
             @endisset
-            Формы
-        </a>
-        <div class="dropdown-menu" aria-labelledby="user-dropdown">
             @can('settings-management')
-                <a href="{{ route('admin.ajax-forms.index') }}"
-                   class="dropdown-item">
-                    Список
-                </a>
-                <a href="{{ route('admin.ajax-forms.create') }}"
-                   class="dropdown-item">
-                    Создать
-                </a>
+                Отправления
             @endcan
-
-            @inject('string', 'Illuminate\Support\Str')
-            @foreach($ajaxForms as $form)
-                <a href="{{ route('admin.ajax-forms.submissions', ['form' => $form]) }}"
-                   class="dropdown-item">
-                    {{ $string->limit($form->title, 20) }}
-                </a>
-            @endforeach
-        </div>
+            @cannot("settings-management")
+                Формы
+            @endcannot
+        </a>
     </li>
 @endcan
