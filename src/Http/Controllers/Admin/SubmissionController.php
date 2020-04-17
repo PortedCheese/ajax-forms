@@ -21,6 +21,7 @@ class SubmissionController extends Controller
 
     public function __construct()
     {
+        $this->authorize("viewAll", AjaxFormSubmission::class);
         parent::__construct();
         $this->filterFields = new FilterFields();
     }

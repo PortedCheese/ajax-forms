@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Log;
 
-class AjaxFormSubmissionNotification extends Notification
+class AjaxFormSubmissionNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
