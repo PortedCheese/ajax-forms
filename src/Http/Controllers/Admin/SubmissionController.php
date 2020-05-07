@@ -21,7 +21,6 @@ class SubmissionController extends Controller
 
     public function __construct()
     {
-        $this->authorize("viewAll", AjaxFormSubmission::class);
         parent::__construct();
         $this->filterFields = new FilterFields();
     }
@@ -30,9 +29,12 @@ class SubmissionController extends Controller
      * Список всех форм.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index()
     {
+        $this->authorize("viewAll", AjaxFormSubmission::class);
+
         $forms = AjaxForm::all();
         return view("ajax-forms::admin.ajax-submissions.index", [
             'forms' => $forms,
