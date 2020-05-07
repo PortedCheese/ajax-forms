@@ -33,7 +33,7 @@ class SubmissionController extends Controller
      */
     public function index()
     {
-        $this->authorize("viewAll", AjaxFormSubmission::class);
+        $this->authorize("viewAny", AjaxFormSubmission::class);
 
         $forms = AjaxForm::all();
         return view("ajax-forms::admin.ajax-submissions.index", [
