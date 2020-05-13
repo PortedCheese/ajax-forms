@@ -75,7 +75,7 @@ class SubmissionController extends Controller
                 }
                 else {
                     $fields[$fieldId] = [
-                        'value' => url()->route('admin.ajax-forms.submission.download', ['submission' => $submission]),
+                        'value' => url()->route('admin.ajax-forms.submissions.download', ['submission' => $submission]),
                         'type' => $field->type,
                     ];
                 }
