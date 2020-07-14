@@ -11,7 +11,7 @@
                 @isset($ico)
                     <i class="{{ $ico }}"></i>
                 @endisset
-                Формы
+                <span>Формы</span>
             </a>
         </li>
     @endcan
@@ -22,10 +22,10 @@
                 <i class="{{ $ico }}"></i>
             @endisset
             @can('settings-management')
-                Отправления
+                <span>Отправления</span>
             @endcan
             @cannot("settings-management")
-                Формы
+                <span>Формы</span>
             @endcannot
         </a>
     </li>
