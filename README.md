@@ -24,14 +24,3 @@
                             {--config : Create config}
                             {--menu : Config menu}
                              
-### Versions:
-
-    v1.2.4:
-        - Добавлен аттрибут --only-default
-    Обновление:
-        - php artisan make:ajax-forms --controllers
-    
-    v1.2.3:
-        - Добавлены права доступа
-    Обновление:
-        - php artisan make:ajax-forms --policies
