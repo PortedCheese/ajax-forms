@@ -6,8 +6,7 @@ use App\AjaxForm;
 use App\AjaxFormField;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use PortedCheese\AjaxForms\Http\Requests\FormFieldCreateRequest;
-use PortedCheese\AjaxForms\Http\Requests\FormFieldUpdateRequest;
+use Illuminate\Support\Facades\Validator;
 
 class FieldController extends Controller
 {
@@ -29,12 +28,13 @@ class FieldController extends Controller
     /**
      * Сохранение.
      *
-     * @param FormFieldCreateRequest $request
+     * @param Request $request
      * @param AjaxForm $form
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(FormFieldCreateRequest $request, AjaxForm $form)
+    public function store(Request $request, AjaxForm $form)
     {
+        $this->storeValidator($request->all());
         if (empty($request->get('exists'))) {
             $field = AjaxFormField::create($request->all());
         }
@@ -50,6 +50,26 @@ class FieldController extends Controller
         return redirect()
             ->route("admin.ajax-forms.show", ['ajax_form' => $form])
             ->with('success', 'Поле успешно добавлено');
+    }
+
+    /**
+     * Валидация
+     *
+     * @param $data
+     */
+    public function storeValidator($data)
+    {
+        Validator::make($data, [
+            "title" => ["required", "min:2", "max:100"],
+            "exists" => ["nullable", "required_without_all:name,type", "exists:ajax_form_fields,id"],
+            "type" => ["nullable", "required_without:exists"],
+            "name" => ["nullable", "required_without:exists", "min:4", "unique:ajax_form_fields,name"],
+        ], [], [
+            "title" => "Заголовок",
+            "exists" => "Существующее поле",
+            "type" => "Тип поля",
+            "name" => "Имя поля",
+        ])->validate();
     }
 
     /**
@@ -77,8 +97,9 @@ class FieldController extends Controller
      * @param AjaxFormField $field
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(FormFieldUpdateRequest $request, AjaxForm $form, AjaxFormField $field)
+    public function update(Request $request, AjaxForm $form, AjaxFormField $field)
     {
+        $this->updateValidator($request->all());
         $data = [
             'title' => $request->get('title'),
             'required' => $request->has('required') ? 1 : 0,
@@ -91,11 +112,26 @@ class FieldController extends Controller
     }
 
     /**
+     * Валидация.
+     *
+     * @param array $data
+     */
+    protected function updateValidator(array $data)
+    {
+        Validator::make($data, [
+            "title" => ["required", "min:2", "max:100"],
+        ], [], [
+            "title" => "Заголовок",
+        ])->validate();
+    }
+
+    /**
      * Открепить поле от формы.
      *
      * @param AjaxForm $form
      * @param AjaxFormField $field
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
     public function detach(AjaxForm $form, AjaxFormField $field)
     {

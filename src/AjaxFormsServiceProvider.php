@@ -2,16 +2,21 @@
 
 namespace PortedCheese\AjaxForms;
 
-use Illuminate\Support\Facades\Route;
+
 use Illuminate\Support\ServiceProvider;
 use PortedCheese\AjaxForms\Console\Commands\AjaxFormsMakeCommand;
-use PortedCheese\AjaxForms\Console\Commands\AjaxFormsOverrideCommand;
-use PortedCheese\AjaxForms\Models\AjaxForm;
+use PortedCheese\AjaxForms\Events\CreateNewSubmission;
+use PortedCheese\AjaxForms\Listeners\SendNewSubmissionNotification;
 
 class AjaxFormsServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        // Публикация конфигурации.
+        $this->publishes([
+            __DIR__ . "/config/ajax-forms.php" => config_path("ajax-forms.php"),
+        ], "config");
+
         // Подключение роутов.
         $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
         $this->loadRoutesFrom(__DIR__ . '/routes/admin.php');
@@ -33,11 +38,22 @@ class AjaxFormsServiceProvider extends ServiceProvider
                 AjaxFormsMakeCommand::class,
             ]);
         }
+
+        // Events.
+        $this->app["events"]->listen(CreateNewSubmission::class, SendNewSubmissionNotification::class);
     }
 
     public function register()
     {
+        // Стандартная конфигурация.
+        $this->mergeConfigFrom(
+            __DIR__ . "/config/ajax-forms.php", "ajax-forms"
+        );
 
+        $this->app->singleton("form-submissions-actions", function () {
+            $class = config("ajax-forms.formSubmission");
+            return new $class;
+        });
     }
 
 }

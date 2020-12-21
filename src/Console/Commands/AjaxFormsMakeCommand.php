@@ -20,7 +20,6 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
                                 {--policies : Export and create rules}
                                 {--only-default : Create default rules}
                                 {--js : Include js}
-                                {--config : Create config}
                                 {--menu : Config menu}';
 
     /**
@@ -45,14 +44,6 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
 
     protected $jsIncludes = [
         "app" => ["form"]
-    ];
-
-    protected $configName = "ajax-forms";
-    protected $configTitle = "Формы";
-    protected $configTemplate = "ajax-forms::admin.settings";
-    protected $configValues = [
-        "privacyPolicy" => true,
-        "recaptchaEnabled" => false,
     ];
 
     protected $ruleRules = [
@@ -95,10 +86,6 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
 
         if ($this->option('js') || $all) {
             $this->makeJsIncludes('app');
-        }
-
-        if ($this->option("config") || $all) {
-            $this->makeConfig();
         }
 
         if ($this->option("policies") || $all) {

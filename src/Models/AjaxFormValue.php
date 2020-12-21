@@ -48,36 +48,4 @@ class AjaxFormValue extends Model
     {
         return $this->belongsTo(AjaxFormField::class, 'field_id');
     }
-
-    /**
-     * Создать значения полей для сабмита.
-     *
-     * @param AjaxFormSubmission $submission
-     * @param AjaxFormField $field
-     * @param $value
-     */
-    public static function createForSubmissionByFieldValues(
-        AjaxFormSubmission $submission,
-        AjaxFormField $field,
-        $value
-    ) {
-        $long = NULL;
-        $str = NULL;
-        if ($field->type == 'longText') {
-            $long = $value;
-        }
-        elseif ($field->type == 'file') {
-            $path = $value->store("submissions");
-            $str = $path;
-        }
-        else {
-            $str = $value;
-        }
-        \App\AjaxFormValue::create([
-            'submission_id' => $submission->id,
-            'field_id' => $field->id,
-            'long_value' => $long,
-            'value' => $str,
-        ]);
-    }
 }

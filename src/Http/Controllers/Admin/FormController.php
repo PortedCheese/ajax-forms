@@ -3,14 +3,9 @@
 namespace PortedCheese\AjaxForms\Http\Controllers\Admin;
 
 use App\AjaxForm;
-use App\AjaxFormSubmission;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
-use PortedCheese\AjaxForms\Http\Requests\AjaxFormCreateRequest;
-use PortedCheese\AjaxForms\Http\Requests\AjaxFormUpdateRequest;
+use Illuminate\Support\Facades\Validator;
 use PortedCheese\AjaxForms\Http\Services\FilterFields;
 
 class FormController extends Controller
@@ -51,15 +46,34 @@ class FormController extends Controller
     /**
      * Сохранение формы.
      *
-     * @param AjaxFormCreateRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(AjaxFormCreateRequest $request)
+    public function store(Request $request)
     {
-        AjaxForm::create($request->all());
+        $this->storeValidator($request->all());
+        $form = AjaxForm::create($request->all());
         return redirect()
-            ->route('admin.ajax-forms.index')
+            ->route('admin.ajax-forms.show', ["ajax_form" => $form])
             ->with('success', 'Форма успешно создана');
+    }
+
+    /**
+     * Валидация.
+     *
+     * @param $data
+     */
+    protected function storeValidator($data)
+    {
+        Validator::make($data, [
+            "title" => ["required", "min:2", "max:100"],
+            'name' => ["required", "min:2", "max:100", "unique:ajax_forms,name"],
+            'email' => ["required", "email", "max:250"],
+        ], [], [
+            'title' => "Заголовок",
+            'name' => "Имя формы",
+            'email' => "E-mail",
+        ])->validate();
     }
 
     /**
@@ -91,16 +105,33 @@ class FormController extends Controller
     /**
      * Обновление формы.
      *
-     * @param AjaxFormUpdateRequest $request
+     * @param Request $request
      * @param AjaxForm $ajax_form
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(AjaxFormUpdateRequest $request, AjaxForm $ajax_form)
+    public function update(Request $request, AjaxForm $ajax_form)
     {
+        $this->updateValidator($request->all());
         $ajax_form->update($request->all());
         return redirect()
             ->back()
             ->with('success', 'Успешно обновленно');
+    }
+
+    /**
+     * Валидация.
+     *
+     * @param array $data
+     */
+    protected function updateValidator(array $data)
+    {
+        Validator::make($data, [
+            "title" => ["required", "min:2", "max:100"],
+            "email" => ["required", "email", "max:250"],
+        ], [], [
+            'title' => "Заголовок",
+            'email' => "E-mail",
+        ])->validate();
     }
 
     /**

@@ -2,11 +2,13 @@
 
 namespace PortedCheese\AjaxForms\Notifications;
 
+use App\AjaxForm;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Log;
+use PortedCheese\AjaxForms\Facades\FormSubmissionActions;
 
 class AjaxFormSubmissionNotification extends Notification implements ShouldQueue
 {
@@ -17,7 +19,8 @@ class AjaxFormSubmissionNotification extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      *
-     * @return void
+     * AjaxFormSubmissionNotification constructor.
+     * @param $submission
      */
     public function __construct($submission)
     {
@@ -44,14 +47,21 @@ class AjaxFormSubmissionNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         $form = $this->submission->form;
+        /**
+         * @var AjaxForm $form
+         */
+        $fields = FormSubmissionActions::prepareFieldsForRender($this->submission);
+        $headers = $form->getHeaders();
+        debugbar()->info($fields);
+        debugbar()->info($headers);
         return (new MailMessage)
                     ->subject("Отправка формы {$form->title}")
-                    ->greeting('Здравствуйте!')
-                    ->line('На сайте было зарегистрировано обращение.')
-                    ->action(
-                        'Обращения',
-                        route('admin.ajax-forms.submissions.show', ['form' => $form])
-                    );
+                    ->markdown("ajax-forms::notifications.new-submit", [
+                        "submission" => $this->submission,
+                        "fields" => $fields,
+                        "headers" => $headers,
+                        "url" => route('admin.ajax-forms.submissions.show', ['form' => $form]),
+                    ]);
     }
 
     /**

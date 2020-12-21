@@ -6,11 +6,8 @@ use App\AjaxForm;
 use App\AjaxFormSubmission;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
-use PortedCheese\AjaxForms\Http\Requests\AjaxFormCreateRequest;
-use PortedCheese\AjaxForms\Http\Requests\AjaxFormUpdateRequest;
+use PortedCheese\AjaxForms\Facades\FormSubmissionActions;
 use PortedCheese\AjaxForms\Http\Services\FilterFields;
 
 class SubmissionController extends Controller
@@ -63,23 +60,7 @@ class SubmissionController extends Controller
 
         $submissions = [];
         foreach ($collection as $submission) {
-            $fields = [];
-            foreach ($submission->values as $value) {
-                $field = $value->field;
-                $fieldId = $field->id;
-                if ($field->type != 'file') {
-                    $fields[$fieldId] = [
-                        'value' => !empty($value->value) ? $value->value : $value->long_value,
-                        'type' => $field->type,
-                    ];
-                }
-                else {
-                    $fields[$fieldId] = [
-                        'value' => url()->route('admin.ajax-forms.submissions.download', ['submission' => $submission]),
-                        'type' => $field->type,
-                    ];
-                }
-            }
+            $fields = FormSubmissionActions::prepareFieldsForRender($submission);
             $submissions[] = (object) [
                 'model' => $submission,
                 'fields' => $fields,

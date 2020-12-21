@@ -3,11 +3,8 @@
 namespace PortedCheese\AjaxForms\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use App\AjaxFormSubmission;
 use App\AjaxFormField;
-use PortedCheese\AjaxForms\Http\Requests\AjaxFormCreateRequest;
-use PortedCheese\AjaxForms\Http\Requests\AjaxFormUpdateRequest;
 
 class AjaxForm extends Model
 {
@@ -25,6 +22,9 @@ class AjaxForm extends Model
 
         static::deleting(function (\App\AjaxForm $form) {
             foreach ($form->fields as $field) {
+                /**
+                 * @var AjaxFormField $field
+                 */
                 $form->fields()->detach($field);
                 $field->checkFormsOnDetach();
             }
@@ -63,82 +63,6 @@ class AjaxForm extends Model
         return 'name';
     }
 
-    /**
-     * Валидация создания формы.
-     *
-     * @param AjaxFormCreateRequest $validator
-     * @param bool $attr
-     * @return array
-     */
-    public static function requestAjaxFormCreate(AjaxFormCreateRequest $validator, $attr = false)
-    {
-        if ($attr) {
-            return [
-                'title' => "Заголовок",
-                'name' => "Имя формы",
-                'email' => "E-mail",
-            ];
-        }
-        else {
-            return [
-                'title' => 'required|min:2',
-                'name' => 'required|min:4|unique:ajax_forms,name',
-                'email' => 'required|email',
-            ];
-        }
-    }
-
-    /**
-     * Обновление формы.
-     * @param AjaxFormUpdateRequest $validator
-     * @param bool $attr
-     * @return array
-     */
-    public static function requestAjaxFormUpdate(AjaxFormUpdateRequest $validator, $attr = false)
-    {
-        if ($attr) {
-            return [
-                'title' => "Заголовок",
-                'email' => "E-mail",
-            ];
-        }
-        else {
-            return [
-                'title' => 'required|min:2',
-                'email' => 'required|email',
-            ];
-        }
-    }
-
-    /**
-     * Создать сабмит.
-     *
-     * @param Request $request
-     */
-    public function makeSubmission(Request $request)
-    {
-        $fields = [];
-        foreach ($this->fields as $field) {
-            if ($request->has($field->name)) {
-                if ($field->type == 'file') {
-                    if (!$request->hasFile($field->name)) {
-                        continue;
-                    }
-                    $value = $request
-                        ->file($field->name);
-                }
-                else {
-                    $value = $request->get($field->name);
-                }
-                $fields[] = [
-                    'field' => $field,
-                    'value' => $value,
-                ];
-            }
-        }
-        $form = \App\AjaxForm::find($this->id);
-        AjaxFormSubmission::createForFormByFields($form, $fields);
-    }
 
     /**
      * Заголовки таблицы для вывода.

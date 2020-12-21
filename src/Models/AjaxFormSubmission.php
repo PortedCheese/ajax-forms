@@ -23,8 +23,10 @@ class AjaxFormSubmission extends Model
     {
         parent::boot();
 
-        static::created(function (\App\AjaxFormSubmission $submission) {
-            $submission->notify($submission->getNotifyClass($submission));
+        static::creating(function (\App\AjaxFormSubmission $submission) {
+            if (Auth::check()) {
+                $submission->user_id = Auth::id();
+            }
         });
 
         static::deleting(function (\App\AjaxFormSubmission $submission) {
@@ -95,32 +97,5 @@ class AjaxFormSubmission extends Model
     public function getCreatedAtAttribute($value)
     {
         return datehelper()->changeTz($value);
-    }
-
-    /**
-     * Создать сабмит и значения для формы.
-     *
-     * @param AjaxForm $form
-     * @param array $fields
-     */
-    public static function createForFormByFields(AjaxForm $form, array $fields)
-    {
-        if (Auth::check()) {
-            $user = Auth::user()->id;
-        }
-        else {
-            $user = NULL;
-        }
-        $submission = \App\AjaxFormSubmission::create([
-            'user_id' => $user,
-            'form_id' => $form->id,
-        ]);
-        foreach ($fields as $fieldData) {
-            AjaxFormValue::createForSubmissionByFieldValues(
-                $submission,
-                $fieldData['field'],
-                $fieldData['value']
-            );
-        }
     }
 }
