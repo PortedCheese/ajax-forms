@@ -52,8 +52,6 @@ class AjaxFormSubmissionNotification extends Notification implements ShouldQueue
          */
         $fields = FormSubmissionActions::prepareFieldsForRender($this->submission);
         $headers = $form->getHeaders();
-        debugbar()->info($fields);
-        debugbar()->info($headers);
         return (new MailMessage)
                     ->subject("Отправка формы {$form->title}")
                     ->markdown("ajax-forms::notifications.new-submit", [
