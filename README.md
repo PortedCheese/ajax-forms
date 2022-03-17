@@ -21,8 +21,20 @@
                             {--policies : Export and create rules}
                             {--only-default : Create default rules}
                             {--js : Include js}
-                            {--config : Create config}
+                            {--sass : Include scss}
                             {--menu : Config menu}
+
+## Update v1.7
+
+- Добавлен параметр VendorName для корректной установки пакета.
+- При успешной отправке форма очизается от пользовательских данных.
+- Абсолютное позициционирование уведомления об отправке формы. Параметр конфига alertAbsolute: [true, false = defsult]. Для абсолютного позиционирования уведомления добавьте к форме класс "position-relative" (bootstrap).
+
+                
+       php artisan vendor:publish --provider="PortedCheese\AjaxForms\AjaxFormsServiceProvider" --tag=public --force
+
+       php artisan make:ajax-forms  --sass 
+    
 
 ## Config
 

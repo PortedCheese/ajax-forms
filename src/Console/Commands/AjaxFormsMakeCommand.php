@@ -20,6 +20,7 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
                                 {--policies : Export and create rules}
                                 {--only-default : Create default rules}
                                 {--js : Include js}
+                                {--scss : Include scss}
                                 {--menu : Config menu}';
 
     /**
@@ -28,6 +29,8 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
      * @var string
      */
     protected $description = 'Settings for ajax forms';
+
+    protected $vendorName = 'PortedCheese';
 
     protected $packageName = "AjaxForms";
 
@@ -44,6 +47,17 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
 
     protected $jsIncludes = [
         "app" => ["form"]
+    ];
+
+    /**
+     * Стили.
+     *
+     * @var array
+     */
+    protected $scssIncludes = [
+        "app" => [
+            "ajax-forms/alert-absolute",
+        ],
     ];
 
     protected $ruleRules = [
@@ -86,6 +100,10 @@ class AjaxFormsMakeCommand extends BaseConfigModelCommand
 
         if ($this->option('js') || $all) {
             $this->makeJsIncludes('app');
+        }
+
+        if ($this->option('scss') || $all) {
+            $this->makeScssIncludes('app');
         }
 
         if ($this->option("policies") || $all) {

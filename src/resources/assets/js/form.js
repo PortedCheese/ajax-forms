@@ -66,9 +66,9 @@
                 let data = response.data;
                 if (data.messages.length) {
                     $(data.messages).prependTo($form);
-                }
-                if (data.success) {
-                    $form.trigger('reset');
+                    if (data.messages.indexOf("success")) {
+                        $form.trigger('reset');
+                    }
                 }
             })
             .catch(error => {
