@@ -3,7 +3,7 @@
     "description": "Submit contact form by ajax",
     "type": "library",
     "require": {
-        "portedcheese/base-settings": "^3.0"
+        "portedcheese/base-settings": "^3.0 | ^4.0"
     },
     "license": "MIT",
     "authors": [
