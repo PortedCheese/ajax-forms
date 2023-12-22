@@ -6,6 +6,7 @@
     function changeForms() {
         let $forms = $('.sending-form-custom');
         $forms.each(function (index, element) {
+            disableSubmit(element);
             $(element).on('submit', function (event) {
                 event.preventDefault();
                 clickElement(event, false);
@@ -20,6 +21,32 @@
                     clickElement(event, true);
                 });
         });
+    }
+
+    function disableSubmit(form){
+        let $btn = $(form).find("button[type='submit']");
+        if (! $btn) return;
+
+        $btn.attr('disabled', 'disabled');
+
+        $(form).on('change', function (event) {
+            let res = validateInputs(this);
+            if (res)
+                $btn.removeAttr('disabled');
+            else
+                if(! $btn.attr('disabled'))
+                    $btn.attr('disabled', 'disabled');
+        });
+    }
+
+    function validateInputs(form){
+        var validate = true;
+        $(form).find('input[required]').each(function (){
+            var value = $(this).val();
+            if (! value || value === "")
+                 validate = false;
+        });
+        return validate;
     }
 
     function clickElement(event, input) {
