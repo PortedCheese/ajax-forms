@@ -47,16 +47,24 @@ class AjaxFormSubmission extends Model
         return new AjaxFormSubmissionNotification($submission);
     }
 
+
     /**
      * Route notifications for the mail channel.
      *
      * @param  \Illuminate\Notifications\Notification  $notification
-     * @return string
+     * @return array
      */
+
     public function routeNotificationForMail($notification)
     {
-        return $this->form->email;
+        return $this->emailsToArray();
     }
+
+    private function emailsToArray() {
+        //perform more checks that you need
+        return array_map('trim', explode(',', $this->form->email));
+    }
+
 
     /**
      * У сабмита есть много значений.

@@ -34,6 +34,7 @@
                         <label for="email">E-mail <span class="text-danger">*</span></label>
                         <input type="email"
                                required
+                               multiple
                                id="email"
                                name="email"
                                value="{{ old("email", $form->email) }}"

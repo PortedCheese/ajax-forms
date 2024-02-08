@@ -65,14 +65,15 @@ class FormController extends Controller
      */
     protected function storeValidator($data)
     {
+
         Validator::make($data, [
             "title" => ["required", "min:2", "max:100"],
             'name' => ["required", "min:2", "max:100", "unique:ajax_forms,name"],
-            'email' => ["required", "email", "max:250"],
+            'email.*' => ["required", "email", "max:250"],
         ], [], [
             'title' => "Заголовок",
             'name' => "Имя формы",
-            'email' => "E-mail",
+            'email.*' => "E-mail",
         ])->validate();
     }
 
@@ -127,10 +128,10 @@ class FormController extends Controller
     {
         Validator::make($data, [
             "title" => ["required", "min:2", "max:100"],
-            "email" => ["required", "email", "max:250"],
+            "email.*" => ["required", "email", "max:250"],
         ], [], [
             'title' => "Заголовок",
-            'email' => "E-mail",
+            'email.*' => "E-mail",
         ])->validate();
     }
 

@@ -2,6 +2,27 @@
 
 Описание версий и необходимые обновления
 
+## [Update v1.7.3]
+- Возможность добавления нескольких email для уведомлений, обновлены: тип поля -  email multiple, валидация этого поля, а также модель AjaxFormSubmission
+
+## [Update v1.7.2]
+- Добавлена блокировка кнопки submit (для .sending-form-custom), пока не будут заполнены required-поля 
+
+
+    php artisan vendor:publish --provider="PortedCheese\AjaxForms\AjaxFormsServiceProvider" --tag=public --force
+
+## [Update v1.7]
+
+- Добавлен параметр VendorName для корректной установки пакета.
+- При успешной отправке форма очизается от пользовательских данных.
+- Абсолютное позициционирование уведомления об отправке формы. Параметр конфига alertAbsolute: [true, false = defsult]. Для абсолютного позиционирования уведомления добавьте к форме класс "position-relative" (bootstrap).
+
+
+       php artisan vendor:publish --provider="PortedCheese\AjaxForms\AjaxFormsServiceProvider" --tag=public --force
+
+       php artisan make:ajax-forms  --scss 
+
+
 ## [v1.5.0]
 
 ### Изменения:

@@ -46,6 +46,7 @@
                     <div class="form-group">
                         <label for="email">E-mail <span class="text-danger">*</span></label>
                         <input type="email"
+                               multiple
                                required
                                id="email"
                                name="email"
