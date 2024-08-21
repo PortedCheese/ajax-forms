@@ -1,11 +1,11 @@
 <form action="{{ route($currentRoute, ['form' => $form]) }}"
-      class="form-inline"
+      class="d-xl-inline-flex"
       method="get">
     @foreach($headers as $head)
         @if ($head->type == 'text')
             <label class="sr-only" for="{{ $head->name }}">{{ $head->title }}</label>
             <input type="text"
-                   class="form-control mb-2 mr-sm-2"
+                   class="form-control mb-2 me-sm-2"
                    id="{{ $head->name }}"
                    name="{{ $head->name }}"
                    value="{{ $query->get($head->name) }}"
@@ -15,7 +15,7 @@
 
     <label class="sr-only" for="author">Автор(email)</label>
     <input type="text"
-           class="form-control mb-2 mr-sm-2"
+           class="form-control mb-2 me-sm-2"
            id="author"
            name="author"
            value="{{ $query->get('author') }}"
@@ -23,7 +23,7 @@
 
     <label class="sr-only" for="from">Дата от</label>
     <input type="date"
-           class="form-control mb-2 mr-sm-2"
+           class="form-control mb-2 me-sm-2"
            id="from"
            name="from"
            value="{{ $query->get('from') }}"
@@ -31,7 +31,7 @@
 
     <label class="sr-only" for="to">Дата до</label>
     <input type="date"
-           class="form-control mb-2 mr-sm-2"
+           class="form-control mb-2 me-sm-2"
            id="to"
            name="to"
            value="{{ $query->get('to') }}"

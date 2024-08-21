@@ -2,6 +2,15 @@
 
 Описание версий и необходимые обновления
 
+## [Update v2.0.0]
+- base-settings 5.0 (bootstrap 5)
+- переписан assets/js/form.js на js 
+- обновлены admin views
+- оновлен site.messages view
+
+
+    php artisan vendor:publish --provider="PortedCheese\AjaxForms\AjaxFormsServiceProvider" --tag=public --force
+
 ## [Update v1.7.3]
 - Возможность добавления нескольких email для уведомлений, обновлены: тип поля -  email multiple, валидация этого поля, а также модель AjaxFormSubmission
 

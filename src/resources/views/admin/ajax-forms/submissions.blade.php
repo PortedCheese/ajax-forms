@@ -54,7 +54,7 @@
                                 @can("delete", \App\AjaxFormSubmission::class)
                                     <td>
                                         <div role="toolbar" class="btn-toolbar">
-                                            <div class="btn-group mr-1">
+                                            <div class="btn-group me-1">
                                                 <button type="button" class="btn btn-danger" data-confirm="{{ "delete-submission-form-{$submission->model->id}" }}">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>

@@ -7,7 +7,7 @@
     <td>{{ $form->fields->count() }}</td>
     <td>
         <div role="toolbar" class="btn-toolbar">
-            <div class="btn-group mr-1">
+            <div class="btn-group me-1">
                 <a href="{{ route("admin.ajax-forms.edit", ["ajax_form" => $form]) }}" class="btn btn-primary">
                     <i class="far fa-edit"></i>
                 </a>

@@ -1,90 +1,93 @@
-(function ($) {
-    $(document).ready(function(){
-        changeForms();
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    changeForms();
 
-    function changeForms() {
-        let $forms = $('.sending-form-custom');
-        $forms.each(function (index, element) {
+    function changeForms(){
+        let forms = document.querySelectorAll('.sending-form-custom');
+        forms.forEach(function (element, index){
             disableSubmit(element);
-            $(element).on('submit', function (event) {
+            element.addEventListener('submit', function (event){
                 event.preventDefault();
                 clickElement(event, false);
-            });
+            })
+
         });
-        $forms = $('.sending-form');
-        $forms.each(function (index, element) {
-            $(element)
-                .find("input[type='submit']")
-                .click(function (event) {
+        forms = document.querySelectorAll('.sending-form');
+        forms.forEach(function (element, index){
+            element.querySelectorAll("input[type='submit']").forEach(function (el, i){
+                el.addEventListener("click",function (event){
                     event.preventDefault();
                     clickElement(event, true);
-                });
+                })
+            })
         });
     }
 
     function disableSubmit(form){
-        let $btn = $(form).find("button[type='submit']");
-        if (! $btn) return;
+        let btn = form.querySelectorAll("button[type='submit']")[0];
+        if (! btn) return;
 
-        $btn.attr('disabled', 'disabled');
+        btn.setAttribute('disabled', 'disabled');
 
-        $(form).on('change', function (event) {
+        form.addEventListener('change', function (event){
             let res = validateInputs(this);
             if (res)
-                $btn.removeAttr('disabled');
+                btn.removeAttribute('disabled');
             else
-                if(! $btn.attr('disabled'))
-                    $btn.attr('disabled', 'disabled');
-        });
+            if(! btn.getAttribute('disabled'))
+                btn.setAttribute('disabled', 'disabled');
+        })
     }
 
     function validateInputs(form){
         var validate = true;
-        $(form).find('input[required]').each(function (){
-            var value = $(this).val();
+        form.querySelectorAll('input[required]').forEach(function (el, i){
+            var value = el.value;
             if (! value || value === "")
-                 validate = false;
+                validate = false;
         });
         return validate;
     }
 
     function clickElement(event, input) {
-        let $form = false;
-        let $submit = false;
+        let form = false;
+        let submit = false;
         if (input) {
-            $submit = $(event.target);
-            $form = $submit.parents('form');
+            submit = event.target;
+            let parent = submit.parentElement;
+            while (parent.nodeName != "form"){
+                parent = parent.parentElement;
+            }
+            form = parent;
         }
         else {
-            $form = $(event.target);
-            $submit = $form.find("input[type='submit']");
-            if (! $submit.length) {
-                $submit = $form.find("button[type='submit']");
+            form = event.target;
+            submit = form.querySelectorAll("input[type='submit']")[0];
+            if (! submit) {
+                submit = form.querySelectorAll("button[type='submit']")[0];
             }
-            let submitAttr = getAttributes($submit);
+            let submitAttr = getAttributes(submit);
             if (submitAttr.hasOwnProperty('data-target-submit')) {
-                $submit = $(submitAttr['data-target-submit']);
+                submit = submitAttr['data-target-submit'];
             }
         }
-        let formData = new FormData($form[0]);
-        let formAttr = getAttributes($form);
+        let formData = new FormData(form);
+        let formAttr = getAttributes(form);
         let formName = formAttr.hasOwnProperty('data-name') ? formAttr['data-name'] : formAttr['name']
 
-        $submit.attr('disabled', 'disabled');
+        submit.setAttribute('disabled', 'disabled');
         if (input) {
-            var buf = $submit.attr("value");
-            $submit.attr("value", "Обработка");
+            var buf = submit.getAttribute("value");
+            submit.setAttribute("value", "Обработка");
         }
         else {
-            $submit.append("<i class=\"loader fas fa-spinner fa-spin\"></i>");
+            submit.insertAdjacentHTML('beforeend',"<i class=\"loader fas fa-spinner fa-spin\"></i>");
         }
-        $form.find('.invalid-feedback').each(function (inx, el) {
-            $(el).parent().find('input').removeClass('is-invalid');
-            $(el).remove();
+        form.querySelectorAll('.invalid-feedback').forEach(function (el, inx) {
+            el.parentElement.querySelectorAll('input')[0].classList.remove('is-invalid');
+            el.remove();
         });
-        $form.find('div.alert').each(function (inx, el) {
-            $(el).remove();
+        form.querySelectorAll('div.alert').forEach(function (el, inx) {
+            el.remove();
         });
 
         axios
@@ -92,29 +95,30 @@
             .then(response => {
                 let data = response.data;
                 if (data.messages.length) {
-                    $(data.messages).prependTo($form);
+                    form.insertAdjacentHTML('afterbegin', data.messages);
                     if (data.messages.indexOf("success")) {
-                        $form.trigger('reset');
+                        const event = new Event('reset');
+                        form.dispatchEvent(event);
                     }
                 }
             })
             .catch(error => {
                 let data = error.response.data;
                 for (let item in data.errors) {
-                    let $input = $form.find("input[name='" + item + "']");
-                    if ($input.length && false) {
-                        let $parent = $input.parent().append("<span class=\"invalid-feedback\" role=\"alert\"></span>");
-                        let $errorBlock = $parent.find('.invalid-feedback');
-                        $input.toggleClass('is-invalid');
+                    let input = form.querySelectorAll("input[name='" + item + "']")[0];
+                    if (input && false) {
+                        let parent = input.parentElement.insertAdjacentHTML('beforeend',"<span class=\"invalid-feedback\" role=\"alert\"></span>");
+                        let errorBlock = parent.querySelector('.invalid-feedback');
+                        input.classList.toggle('is-invalid');
                         for (index in data.errors[item]) {
                             if (data.errors[item].hasOwnProperty(index)) {
-                                $errorBlock.append("<strong>" + data.errors[item][index] + "</strong>");
+                                errorBlock.insertAdjacentHTML('beforeend',"<strong>" + data.errors[item][index] + "</strong>");
                             }
                         }
                     }
                     else {
                         let messages = "<div class=\"alert alert-danger\" role=\"alert\">" +
-                            "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">" +
+                            "<button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\">" +
                             "<span aria-hidden=\"true\">&times;</span>" +
                             "</button>";
                         for (index in data.errors[item]) {
@@ -123,27 +127,30 @@
                             }
                         }
                         messages += "</div>";
-                        $(messages).prependTo($form);
+                        form.insertAdjacentHTML('afterbegin', messages);
                     }
                 }
             })
             .finally(() => {
-                $submit.removeAttr('disabled');
+                submit.removeAttribute('disabled');
                 if (input) {
-                    $submit.attr("value", buf);
+                    submit.setAttribute("value", buf);
                 }
                 else {
-                    $submit.find(".loader").remove();
+                    submit.querySelector(".loader").remove();
                 }
             });
     }
-
-    function getAttributes ( $node ) {
+    function getAttributes ( node ) {
         let attrs = {};
-        $.each( $node[0].attributes, function ( index, attribute ) {
-            attrs[attribute.name] = attribute.value;
-        } );
+        if (node.hasAttributes()){
+            var attributes = node.attributes;
+            for (var i = attributes.length - 1; i >= 0; i--){
+                attrs[attributes[i].name] = attributes[i].value;
+            }
+        }
 
         return attrs;
     }
-})(jQuery);
+});
+
