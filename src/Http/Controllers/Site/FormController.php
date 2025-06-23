@@ -75,6 +75,11 @@ class FormController extends Controller
             $messages['g-recaptcha-response.hidden_captcha'] = "Ошибка подтверждения";
         }
 
+        if (config("ajax-forms.smartCaptchaEnabled", false) && ! Auth::check()) {
+            $rules["smart-token"] = 'required|smart_captcha';
+            $messages['smart-token.required'] = "Подтвердите что Вы не робот";
+        }
+
         foreach ($form->fields as $field) {
             $pivot = $field->pivot;
             if (! $pivot->required) {

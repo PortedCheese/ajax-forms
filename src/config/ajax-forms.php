@@ -3,6 +3,7 @@
 return [
     "privacyPolicy" => true,
     "recaptchaEnabled" => false,
+    "smartCaptchaEnabled" => false,
     "alertAbsolute" => false,
 
     // FACADES
